@@ -35,7 +35,7 @@ class RecipesController < ApplicationController
   protected
 
   def recipe_params
-    params.fetch(:recipe, {}).permit(:name, :link, :notes)
+    params.fetch(:recipe, {}).permit(:name, :link, :instructions)
   end
 
 end

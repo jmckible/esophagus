@@ -3,9 +3,12 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.5.1'
 
+gem 'actiontext', github: 'rails/actiontext', require: 'action_text'
+gem 'aws-sdk-s3', '1.20.0', require: false
 gem 'bcrypt', '3.1.12'
 gem 'bootsnap', '1.3.2', require: false
 gem 'haml', '5.0.4'
+gem 'image_processing', '1.7.1'
 gem 'parser', '2.5.1.2'
 gem 'pg', '1.1.3'
 gem 'rails', '5.2.1'

@@ -2,7 +2,9 @@
   "name": "cook",
   "private": true,
   "dependencies": {
-    "@rails/webpacker": "3.5"
+    "@rails/webpacker": "3.5",
+    "actiontext": "https://github.com/rails/actiontext",
+    "trix": "^1.0.0"
   },
   "devDependencies": {
     "webpack-dev-server": "2.11.2"
