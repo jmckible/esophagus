@@ -1,1 +1,6 @@
 %h1 Recipes
+
+%p= link_to 'New', [:new, :recipe]
+
+- @recipes.each do |r|
+  %p= link_to r.name, r

@@ -1,0 +1,8 @@
+%h1 Edit
+
+= form_with model: @recipe do |f|
+  = render f
+  = f.submit 'Update'
+
+
+%p= link_to 'Back', @recipe

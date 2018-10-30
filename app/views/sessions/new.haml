@@ -1,0 +1,6 @@
+= form_with url: authenticate_path do |f|
+  %p= f.text_field :email, placeholder: 'Email'
+  %p= f.password_field :password, placeholder: 'Password'
+  %p= f.submit 'Login'
+
+%p= flash[:alert]

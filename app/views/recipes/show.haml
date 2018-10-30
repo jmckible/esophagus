@@ -1,0 +1,9 @@
+%h1= @recipe.name
+
+- if @recipe.link
+  %p= link_to @recipe.link, @recipe.link
+
+= simple_format @recipe.notes
+
+%p= link_to 'Edit', [:edit, @recipe]
+%p= link_to 'Back', root_url
