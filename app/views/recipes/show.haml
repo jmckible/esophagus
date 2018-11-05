@@ -5,5 +5,19 @@
 
 = @recipe.instructions
 
+%h2 History
+
+%p Times cooked: #{@recipe.cooks.count}
+
+- @recipe.cooks.order(date: :desc).last(10).each do |c|
+  %p
+    = c.date.to_s :long
+    = link_to 'x', c, method: :delete
+
+= form_with model: Cook.new(date: Date.today), url: [@recipe, :cooks] do |f|
+  %p
+    = f.date_select :date, order: [:month, :day, :year]
+    = f.submit 'Cooked This Day'
+
 %p= link_to 'Edit', [:edit, @recipe]
 %p= link_to 'Back', root_url
