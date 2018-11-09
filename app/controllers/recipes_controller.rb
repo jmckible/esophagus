@@ -1,7 +1,6 @@
 class RecipesController < ApplicationController
 
   def index
-    @recipes = Current.cookbook.recipes.abc
   end
 
   def show
@@ -35,7 +34,7 @@ class RecipesController < ApplicationController
   protected
 
   def recipe_params
-    params.fetch(:recipe, {}).permit(:name, :link, :instructions)
+    params.fetch(:recipe, {}).permit(:name, :link, :instructions, :section_id)
   end
 
 end

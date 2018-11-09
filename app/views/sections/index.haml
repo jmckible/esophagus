@@ -1,0 +1,21 @@
+%h1 Sections
+
+= form_with model: @section, url: @section do |f|
+  %p= f.text_field :position, placeholder: 'Position'
+  %p= f.text_field :name, placeholder: 'Name'
+  %p= f.submit 'Create'
+
+%table
+  %tr
+    %th Position
+    %th Name
+    %th Update
+  - @sections.each do |s|
+    = form_with model: s do |f|
+      %tr
+        %td= f.text_field :position
+        %td= f.text_field :name
+        %td= f.submit 'Update'
+
+
+%p= link_to 'Back', root_path

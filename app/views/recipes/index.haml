@@ -2,5 +2,27 @@
 
 %p= link_to 'New', [:new, :recipe]
 
-- @recipes.each do |r|
-  %p= link_to r.name, r
+%table
+  %tr
+    %th Recipe
+    %th Times Cooked
+    %th Last Cooked
+
+  - Current.cookbook.sections.by_position.each do |section|
+    %tr
+      %td{ colspan: 3}
+        %h2= section.name
+    - section.recipes.abc.each do |recipe|
+      %tr
+        %td= link_to recipe.name, recipe
+        %td= recipe.cooks.count
+        %td= recipe.last_cooked_on&.to_s(:long)
+
+  - Current.cookbook.recipes.where(section: nil).abc.each do |recipe|
+    %tr
+      %td= link_to recipe.name, recipe
+      %td= recipe.cooks.count
+      %td= recipe.last_cooked_on&.to_s(:long)
+
+
+%p= link_to 'Manage Sections', :sections

@@ -7,5 +7,7 @@ Rails.application.routes.draw do
     resources :cooks, shallow: true
   end
 
+  resources :sections
+
   root to: 'recipes#index'
 end

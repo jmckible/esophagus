@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_05_224938) do
+ActiveRecord::Schema.define(version: 2018_11_09_021958) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -66,7 +66,21 @@ ActiveRecord::Schema.define(version: 2018_11_05_224938) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "cookbook_id"
+    t.integer "section_id"
+    t.date "last_cooked_on"
+    t.integer "cooks_count", default: 0
     t.index ["cookbook_id"], name: "index_recipes_on_cookbook_id"
+    t.index ["section_id", "name"], name: "index_recipes_on_section_id_and_name"
+  end
+
+  create_table "sections", force: :cascade do |t|
+    t.string "name"
+    t.bigint "cookbook_id"
+    t.integer "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cookbook_id", "position"], name: "index_sections_on_cookbook_id_and_position"
+    t.index ["cookbook_id"], name: "index_sections_on_cookbook_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -81,5 +95,6 @@ ActiveRecord::Schema.define(version: 2018_11_05_224938) do
   end
 
   add_foreign_key "cooks", "recipes"
+  add_foreign_key "sections", "cookbooks"
   add_foreign_key "users", "cookbooks"
 end

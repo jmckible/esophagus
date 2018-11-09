@@ -1,5 +1,9 @@
 %h1= @recipe.name
 
+%p= link_to 'Edit', [:edit, @recipe]
+%p= link_to 'Back', root_url
+%p Section: #{@recipe.section&.name}
+
 - if @recipe.link
   %p= link_to @recipe.link, @recipe.link
 
@@ -18,6 +22,3 @@
   %p
     = f.date_select :date, order: [:month, :day, :year]
     = f.submit 'Cooked This Day'
-
-%p= link_to 'Edit', [:edit, @recipe]
-%p= link_to 'Back', root_url
