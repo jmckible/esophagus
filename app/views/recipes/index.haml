@@ -1,22 +1,16 @@
 .row
   .col= btn_to 'Add a Recipe', [:new, :recipe]
-  .col
-  .col= btn_to 'Manage Sections', :sections, type: 'secondary'
-
-%br
-%br
+  .col= btn_to 'Manage Sections', :sections, type: 'secondary', style: 'float-right'
 
 - Current.cookbook.sections.by_position.each do |section|
+  %br
+  %br
   %h2= section.name
   %table.table.table-striped
-    %tr
-      %th Recipe
-      %th Times Cooked
-      %th Last Cooked
     - section.recipes.abc.each do |recipe|
       %tr
+        %td{ width: '2em'}= fire_if recipe.favorite?
         %td= link_to recipe.name, recipe
-        %td= not_zero recipe.cooks.count
         %td= time_ago_in_words(recipe.last_cooked_on) if recipe.last_cooked_on
 
 - if Current.cookbook.recipes.where(section: nil).any?

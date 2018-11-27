@@ -9,5 +9,9 @@ class Recipe < ApplicationRecord
 
   scope :abc, ->{ reorder(name: :asc) }
 
+  def favorite?
+    cooks.count > (2 * cookbook.cooks_stddev)
+  end
+
   validates :name, presence: true
 end
