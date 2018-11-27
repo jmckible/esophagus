@@ -1,28 +1,27 @@
-%h1 Recipes
+.row
+  .col= btn_to 'Add a Recipe', [:new, :recipe]
+  .col
+  .col= btn_to 'Manage Sections', :sections, type: 'secondary'
 
-%p= link_to 'New', [:new, :recipe]
+%br
+%br
 
-%table
-  %tr
-    %th Recipe
-    %th Times Cooked
-    %th Last Cooked
-
-  - Current.cookbook.sections.by_position.each do |section|
+- Current.cookbook.sections.by_position.each do |section|
+  %h2= section.name
+  %table.table.table-striped
     %tr
-      %td{ colspan: 3}
-        %h2= section.name
+      %th Recipe
+      %th Times Cooked
+      %th Last Cooked
     - section.recipes.abc.each do |recipe|
       %tr
         %td= link_to recipe.name, recipe
-        %td= recipe.cooks.count
-        %td= recipe.last_cooked_on&.to_s(:long)
+        %td= not_zero recipe.cooks.count
+        %td= time_ago_in_words(recipe.last_cooked_on) if recipe.last_cooked_on
 
-  - Current.cookbook.recipes.where(section: nil).abc.each do |recipe|
-    %tr
-      %td= link_to recipe.name, recipe
-      %td= recipe.cooks.count
-      %td= recipe.last_cooked_on&.to_s(:long)
-
-
-%p= link_to 'Manage Sections', :sections
+- if Current.cookbook.recipes.where(section: nil).any?
+  %h2 Uncategorized
+  %table.table.table-striped
+    - Current.cookbook.recipes.where(section: nil).abc.each do |recipe|
+      %tr
+        %td= link_to recipe.name, recipe
