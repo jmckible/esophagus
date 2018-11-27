@@ -10,7 +10,12 @@ class Recipe < ApplicationRecord
   scope :abc, ->{ reorder(name: :asc) }
 
   def favorite?
-    cooks.count > (2 * cookbook.cooks_stddev)
+    cooks.count > cookbook.favorite_benchmark
+  end
+
+  def forgotten?
+    return false unless last_cooked_on
+    last_cooked_on < cookbook.forgotten_benchmark.days.ago
   end
 
   validates :name, presence: true

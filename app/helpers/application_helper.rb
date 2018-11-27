@@ -9,6 +9,10 @@ module ApplicationHelper
     '🔥' if boolean
   end
 
+  def forgotten_if(boolean)
+    '👻' if boolean
+  end
+
   def not_zero(number)
     number unless number.to_i.zero?
   end

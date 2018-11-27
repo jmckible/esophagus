@@ -3,15 +3,18 @@
   .col= btn_to 'Manage Sections', :sections, type: 'secondary', style: 'float-right'
 
 - Current.cookbook.sections.by_position.each do |section|
+  - group = section.recipes.count > 10 ? 2 : 1
   %br
   %br
   %h2= section.name
   %table.table.table-striped
-    - section.recipes.abc.each do |recipe|
+    - section.recipes.abc.in_groups_of(group, false) do |group|
       %tr
-        %td{ width: '2em'}= fire_if recipe.favorite?
-        %td= link_to recipe.name, recipe
-        %td= time_ago_in_words(recipe.last_cooked_on) if recipe.last_cooked_on
+        - group.each do |recipe|
+          %td{ width: '1em'}
+            = fire_if recipe.favorite?
+            = forgotten_if recipe.forgotten?
+          %td= link_to recipe.name, recipe
 
 - if Current.cookbook.recipes.where(section: nil).any?
   %h2 Uncategorized
