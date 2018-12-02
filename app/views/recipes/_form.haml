@@ -1,4 +1,4 @@
 %p= form.text_field :name, placeholder: 'Name'
 %p= form.text_field :link, placeholder: 'Link'
 %p= form.collection_select :section_id, Current.cookbook.sections.by_position, :id, :name, include_blank: true
-%p= form.rich_text_area :instructions, placeholder: 'Notes'
+%p= form.rich_text_area :instructions, style: 'min-height: 10em;border: 1px solid'
