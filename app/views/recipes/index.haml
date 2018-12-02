@@ -3,12 +3,12 @@
   .col= btn_to 'Manage Sections', :sections, type: 'secondary', style: 'float-right'
 
 - Current.cookbook.sections.by_position.each do |section|
-  - group = section.recipes.count > 10 ? 2 : 1
+  - columns = section.recipes.count > 10 ? 2 : 1
   %br
   %br
   %h2= section.name
   %table.table.table-striped
-    - section.recipes.abc.in_groups_of(group, false) do |group|
+    - section.recipes.abc.in_groups_of(columns, false) do |group|
       %tr
         - group.each do |recipe|
           %td{ width: '1em'}
