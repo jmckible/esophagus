@@ -15,7 +15,7 @@
           - recipe = columns&.at(j)&.at(i)
           - if recipe
             %td{ width: '1em'}
-              = fire_if recipe.favorite?
+              = fire_if recipe.favorite? && !recipe.forgotten?
               = forgotten_if recipe.forgotten?
             %td= link_to recipe.name, recipe
 
