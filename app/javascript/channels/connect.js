@@ -1,4 +1,4 @@
-import ActionCable from 'actioncable'
+import ActionCable from '@rails/actioncable'
 
 (function() {
   if (!window.App) { window.App = {} }

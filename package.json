@@ -1,15 +1,16 @@
 {
-  "name": "cook",
+  "name": "esophagus",
   "private": true,
   "dependencies": {
-    "@rails/webpacker": "3.5",
-    "actioncable": "^5.2.1",
-    "actiontext": "https://github.com/rails/actiontext",
+    "@rails/actioncable": "^6.0.2",
+    "@rails/actiontext": "^6.0.2",
+    "@rails/activestorage": "^6.0.2",
+    "@rails/ujs": "^6.0.2",
+    "@rails/webpacker": "^4.2.2",
     "js.cookie": "^0.0.4",
     "jstz": "^2.1.1",
-    "rails-ujs": "^5.2.1",
-    "stimulus": "^1.1.0",
-    "trix": "^1.0.0",
+    "stimulus": "https://github.com/stimulusjs/dev-builds/archive/b8cc8c4/stimulus.tar.gz",
+    "trix": "^1.2.2",
     "turbolinks": "^5.2.0"
   },
   "devDependencies": {

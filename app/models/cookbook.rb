@@ -6,7 +6,7 @@ class Cookbook < ApplicationRecord
   has_many :cooks, through: :recipes
 
   def favorite_benchmark
-    2 *cooks_stddev
+    2 * cooks_stddev
   end
 
   def forgotten_benchmark

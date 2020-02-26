@@ -19,7 +19,7 @@ module Vocal
     # config.active_job.queue_adapter = :sidekiq
 
     # After a crash, AdministratorConstraints fails to reload with :zeitwork
-    config.autoloader = :classic
+    # config.autoloader = :classic
 
     # Custom error pages
     # config.exceptions_app = self.routes

@@ -15,7 +15,7 @@ class Recipe < ApplicationRecord
 
   def forgotten?
     return false unless last_cooked_on
-    last_cooked_on < cookbook.forgotten_benchmark.days.ago
+    favorite? && last_cooked_on < cookbook.forgotten_benchmark.days.ago
   end
 
   validates :name, presence: true
