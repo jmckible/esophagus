@@ -24,4 +24,8 @@ class Cookbook < ApplicationRecord
   def time_deviations
     @time_deviations ||= (365.0 / recipes.where.not(cooks_count: 0).count).floor
   end
+
+  def to_param
+    param
+  end
 end

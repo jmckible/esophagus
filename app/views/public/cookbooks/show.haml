@@ -1,0 +1,17 @@
+- @cookbook.sections.by_position.each do |section|
+  %br
+  %br
+  %h2= section.name
+  - if section.recipes.any?
+    %table.table.table-striped
+      - count = [(section.recipes.count / 10.0).ceil, 3].min
+      - columns = section.recipes.abc.in_groups(count)
+      - 0.upto(columns.first.size) do |i|
+        %tr
+          - 0.upto(count) do |j|
+            - recipe = columns&.at(j)&.at(i)
+            - if recipe
+              %td{ width: '1em'}
+                = fire_if recipe.favorite? && !recipe.forgotten?
+                = forgotten_if recipe.forgotten?
+              %td= link_to recipe.name, [:public, recipe]

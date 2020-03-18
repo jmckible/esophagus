@@ -1,0 +1,9 @@
+%h1= @recipe.name
+
+%p= link_to 'Back', [:public, @recipe.cookbook]
+%p Section: #{@recipe.section&.name}
+
+- if @recipe.link
+  %p= link_to @recipe.link, @recipe.link
+
+= @recipe.instructions
