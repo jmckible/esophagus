@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   end
 
   resources :cookbooks
-  resources :recipes do
+  resources :recipes, path: 'r' do
     resources :cooks, shallow: true
   end
 
