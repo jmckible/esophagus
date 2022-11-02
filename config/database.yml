@@ -80,6 +80,4 @@ test:
 #
 production:
   <<: *default
-  database: cook_production
-  username: cook
-  password: <%= ENV['COOK_DATABASE_PASSWORD'] %>
+  url: <%= ENV['DATABASE_URL'] %>
