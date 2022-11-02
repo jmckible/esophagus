@@ -5,5 +5,5 @@ when 'test'
   Rails.application.config.hosts << 'www.example.com'
   Rails.application.config.hosts << 'esophagus.test'
 when 'production'
-  Rails.application.config.hosts << 'esophagus.onrender.com'
+  Rails.application.config.hosts << 'esophagus.fly.dev'
 end
