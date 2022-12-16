@@ -15,7 +15,7 @@
 
 - @recipe.cooks.order(date: :desc).each do |c|
   %p
-    = c.date.to_s
+    .date{style: 'float: left'}= c.date.to_s
     = button_to 'x', c, method: :delete
 
 = form_with model: Cook.new(date: Date.today), url: [@recipe, :cooks] do |f|
