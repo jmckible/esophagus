@@ -1,6 +1,6 @@
 %h1 Edit
 
-= form_with model: @recipe do |f|
+= form_with model: @recipe, data: { remote: true, turbo: false } do |f|
   = render f
   = f.submit 'Update'
 

@@ -18,7 +18,7 @@
     .date{style: 'float: left'}= c.date.to_s
     = button_to 'x', c, method: :delete
 
-= form_with model: Cook.new(date: Date.today), url: [@recipe, :cooks] do |f|
+= form_with model: Cook.new(date: Date.today), url: [@recipe, :cooks], data: { remote: true, turbo: false } do |f|
   %p
     = f.date_select :date, order: [:month, :day, :year]
     = f.submit 'Cooked This Day'

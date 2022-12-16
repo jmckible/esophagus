@@ -1,3 +1,3 @@
 class ApplicationController < ActionController::Base
-  include Authentication, TimeZone
+  include Authentication, TimeZone, Turbo::Redirection
 end
