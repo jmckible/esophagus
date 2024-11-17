@@ -1,31 +1,28 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '3.1.1'
+ruby '3.3.1'
+gem 'parser', '3.3.1.0'
 
-gem 'bcrypt', '3.1.18'
-gem 'bootsnap', '1.13.0', require: false
-# gem 'bootstrap', '4.4.1'
-gem 'dartsass-rails', '0.4.0'
-gem 'haml', '6.0.7'
+gem 'bcrypt', '3.1.20'
+gem 'bootsnap', '1.18.4', require: false
+gem 'cssbundling-rails', '1.4.1'
+gem 'dartsass-rails', '0.5.1'
+gem 'haml-rails', '2.1.0'
 gem 'hotwire-rails', '0.1.3'
-gem 'image_processing', '1.12.1'
-gem 'importmap-rails', '1.1.5'
-gem 'parser', '3.1.1.0'
+gem 'image_processing', '1.13.0'
+gem 'importmap-rails', '2.0.3'
+gem 'mutex_m', '0.2.0' # Moving to standard library in ruby 3.4
 gem 'pg', '1.4.4'
-gem 'puma', '6.0.0'
-gem 'rails', '7.0.4'
-gem 'sass', '3.7.4'
-gem 'sprockets-rails', '3.4.2'
-gem 'turbo-rails', '1.3.1'
-
-group :development, :test do
-  gem 'haml_lint', '0.42.0'
-  gem 'rubocop', '1.26.0'
-  gem 'rubocop-rails', '2.14.2', require: false
-end
+gem 'propshaft', '1.1.0'
+gem 'puma', '6.4.3'
+gem 'rails', '8.0.0'
+gem 'sass-embedded', '1.80.4'
 
 group :development do
-  gem 'listen', '3.7.1'
-  gem 'web-console', '4.2.0'
+  gem 'haml_lint', require: false
+  gem 'listen'
+  gem 'rubocop', require: false
+  gem 'rubocop-rails', '2.14.2', require: false
+  gem 'web-console'
 end

@@ -1,3 +1,5 @@
+= content_for :title, @recipe.name
+
 %h1= @recipe.name
 
 %p= link_to 'Edit', [:edit, @recipe]
