@@ -55,14 +55,14 @@ RUN apt-get update -qq && \
 COPY --from=build /usr/local/bundle /usr/local/bundle
 COPY --from=build /rails /rails
 
+# Ensure bin files are executable
+RUN chmod 755 /rails/bin/*
+
 # Run and own only the runtime files as a non-root user for security
 RUN groupadd --system --gid 1000 rails && \
     useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
-    chown -R 1000:1000 db log tmp
+    chown -R 1000:1000 db log storage tmp
 USER 1000:1000
-
-# Entrypoint sets up the container.
-ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
