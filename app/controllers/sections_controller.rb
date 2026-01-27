@@ -27,7 +27,7 @@ class SectionsController < ApplicationController
     if @section.update(params.fetch(:section, {}).permit(:name))
       render :show, layout: false
     else
-      render :edit, layout: false, status: :unprocessable_entity
+      render :edit, layout: false, status: :unprocessable_content
     end
   end
 
@@ -40,7 +40,7 @@ class SectionsController < ApplicationController
   def move_up
     @section = Current.cookbook.sections.find(params[:id])
     previous_section = Current.cookbook.sections.by_position
-      .where('position < ?', @section.position)
+      .where(position: ...@section.position)
       .last
 
     if previous_section
@@ -55,7 +55,7 @@ class SectionsController < ApplicationController
   def move_down
     @section = Current.cookbook.sections.find(params[:id])
     next_section = Current.cookbook.sections.by_position
-      .where('position > ?', @section.position)
+      .where(position: (@section.position + 1)..)
       .first
 
     if next_section
