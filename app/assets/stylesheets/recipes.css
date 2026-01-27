@@ -41,6 +41,41 @@
   opacity: 0.9;
 }
 
+.recipe-item-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.recipe-name {
+  flex: 1;
+  min-width: 0;
+}
+
+.recipe-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  font-size: 0.85rem;
+}
+
+.recipe-meta .last-cooked {
+  white-space: nowrap;
+}
+
+.recipe-meta .link-icon {
+  opacity: 0.6;
+  position: relative;
+  z-index: 1;
+  text-decoration: none;
+}
+
+.recipe-meta .link-icon:hover {
+  opacity: 1;
+}
+
 .recipe-item a {
   color: #212529;
   text-decoration: none;
@@ -74,4 +109,23 @@
     margin-left: -0.5rem;
     margin-right: -0.5rem;
   }
+}
+
+/* Show page */
+.cook-date {
+  font-variant-numeric: tabular-nums;
+}
+
+.card-header {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
+/* Edit page */
+.recipe-form .card {
+  border: 1px solid #dee2e6;
+}
+
+.recipe-form .card-body {
+  padding: 1.5rem;
 }

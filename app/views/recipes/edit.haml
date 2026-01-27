@@ -1,8 +1,58 @@
-%h1 Edit
+%nav{'aria-label': 'breadcrumb'}
+  %ol.breadcrumb
+    %li.breadcrumb-item= link_to 'Recipes', root_url
+    %li.breadcrumb-item= link_to @recipe.name, @recipe
+    %li.breadcrumb-item.active Edit
 
-= form_with model: @recipe, data: { remote: true, turbo: false } do |f|
-  = render f
-  = f.submit 'Update'
+.d-flex.justify-content-between.align-items-start.mb-4
+  %div
+    %h1.mb-2 Edit Recipe
+    .text-muted
+      - if @recipe.parent
+        Variant of #{@recipe.parent.name}
+      - else
+        %span
+          = @recipe.cooks.count
+          = @recipe.cooks.count == 1 ? 'cook' : 'cooks'
+          - if @recipe.variants.any?
+            •
+            = @recipe.variants.count
+            = @recipe.variants.count == 1 ? 'variant' : 'variants'
 
+  - if @recipe.persisted?
+    = button_to 'Delete', @recipe, method: :delete, class: 'btn btn-outline-danger', data: { confirm: 'Are you sure? This cannot be undone.' }
 
-%p= link_to 'Back', @recipe
+= form_with model: @recipe, data: { remote: true, turbo: false }, class: 'recipe-form' do |f|
+  .card.mb-3
+    .card-header
+      %strong Basic Info
+    .card-body
+      .mb-3
+        = f.label :name, class: 'form-label'
+        = f.text_field :name, class: 'form-control', placeholder: 'Recipe name'
+
+      .row
+        .col-md-6.mb-3
+          = f.label :section_id, 'Section', class: 'form-label'
+          = f.collection_select :section_id, Current.cookbook.sections.by_position, :id, :name, {include_blank: 'Uncategorized'}, {class: 'form-select'}
+
+        .col-md-6.mb-3
+          = f.label :parent_id, 'Variant of', class: 'form-label'
+          - disabled = f.object.persisted? && f.object.variants.any?
+          = f.collection_select :parent_id, Current.cookbook.recipes.bases_only.where(section: f.object.section).abc, :id, :name, {include_blank: 'None (base recipe)'}, {class: 'form-select', disabled: disabled}
+          - if disabled
+            .form-text.text-warning Cannot change - recipe has variants
+
+      .mb-3
+        = f.label :link, 'External Link', class: 'form-label'
+        = f.text_field :link, class: 'form-control', placeholder: 'https://example.com/recipe'
+
+  .card.mb-3
+    .card-header
+      %strong Instructions
+    .card-body
+      = f.rich_text_area :instructions, style: 'min-height: 15em'
+
+  .d-flex.gap-2
+    = f.submit 'Save Changes', class: 'btn btn-primary btn-lg'
+    = link_to 'Cancel', @recipe, class: 'btn btn-outline-secondary btn-lg'

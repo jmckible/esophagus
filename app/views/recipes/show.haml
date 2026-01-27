@@ -1,26 +1,71 @@
 = content_for :title, @recipe.name
 
-%h1= @recipe.name
+%nav{'aria-label': 'breadcrumb'}
+  %ol.breadcrumb
+    %li.breadcrumb-item= link_to 'Recipes', root_url
+    - if @recipe.section
+      %li.breadcrumb-item= @recipe.section.name
+    %li.breadcrumb-item.active= @recipe.name
 
-%p= link_to 'Edit', [:edit, @recipe]
-%p= link_to 'Back', root_url
-%p Section: #{@recipe.section&.name}
+.d-flex.justify-content-between.align-items-start.mb-4
+  %div
+    %h1.mb-2
+      = fire_if @recipe.favorite? && !@recipe.forgotten?
+      = forgotten_if @recipe.forgotten?
+      = @recipe.name
 
-- if @recipe.link
-  %p= link_to @recipe.link, @recipe.link
+    .mb-2
+      - if @recipe.section
+        %span.badge.bg-secondary= @recipe.section.name
+      - if @recipe.parent
+        %span.badge.bg-info
+          Variant of
+          = link_to @recipe.parent.name, @recipe.parent, class: 'text-white'
+      - if @recipe.variants.any?
+        %span.badge.bg-info
+          = @recipe.variants.count
+          = @recipe.variants.count == 1 ? 'variant' : 'variants'
+
+    .text-muted
+      %strong= @recipe.cooks.count
+      = @recipe.cooks.count == 1 ? 'cook' : 'cooks'
+      - if @recipe.family_last_cooked_on
+        • Last: #{@recipe.family_last_cooked_on.to_s}
+
+  .text-end
+    = link_to 'Edit', [:edit, @recipe], class: 'btn btn-primary'
+    - if @recipe.link
+      = link_to 'Open Link', @recipe.link, class: 'btn btn-outline-secondary', target: '_blank', rel: 'noopener'
+
+- if @recipe.variants.any?
+  .card.mb-4
+    .card-header
+      %strong Variants
+    .card-body
+      - @recipe.variants.abc.each do |variant|
+        %div
+          = link_to variant.name, variant
 
 = @recipe.instructions
 
-%h2 History
+.card.mt-4.mb-4
+  .card-header
+    %strong Log a Cook
+  .card-body
+    = form_with model: Cook.new(date: Date.today), url: [@recipe, :cooks], data: { remote: true, turbo: false }, class: 'd-flex gap-2 align-items-end' do |f|
+      .flex-grow-1
+        = f.label :date, class: 'form-label'
+        = f.date_field :date, value: Date.today, class: 'form-control'
+      = f.submit 'Log Cook', class: 'btn btn-success'
 
-%p Times cooked: #{@recipe.cooks.count}
-
-- @recipe.cooks.order(date: :desc).each do |c|
-  %p
-    .date{style: 'float: left'}= c.date.to_s
-    = button_to 'x', c, method: :delete
-
-= form_with model: Cook.new(date: Date.today), url: [@recipe, :cooks], data: { remote: true, turbo: false } do |f|
-  %p
-    = f.date_select :date, order: [:month, :day, :year]
-    = f.submit 'Cooked This Day'
+.card.mb-4
+  .card-header
+    %strong History
+  .card-body
+    - if @recipe.cooks.any?
+      - @recipe.cooks.order(date: :desc).each do |c|
+        .d-flex.justify-content-between.align-items-center.border-bottom.py-2
+          .cook-date= c.date.to_s
+          = button_to 'Remove', c, method: :delete, class: 'btn btn-sm btn-outline-danger', data: { confirm: 'Remove this cook?' }
+    - else
+      .text-muted.text-center.py-3 No cooking history yet
