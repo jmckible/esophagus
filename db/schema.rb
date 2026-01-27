@@ -10,38 +10,38 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2022_10_19_211150) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_27_050723) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
   create_table "action_text_rich_texts", force: :cascade do |t|
-    t.string "name", null: false
     t.text "body"
-    t.string "record_type", null: false
-    t.bigint "record_id", null: false
     t.datetime "created_at", precision: nil, null: false
+    t.string "name", null: false
+    t.bigint "record_id", null: false
+    t.string "record_type", null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
   end
 
   create_table "active_storage_attachments", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "record_type", null: false
-    t.bigint "record_id", null: false
     t.bigint "blob_id", null: false
     t.datetime "created_at", precision: nil, null: false
+    t.string "name", null: false
+    t.bigint "record_id", null: false
+    t.string "record_type", null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
 
   create_table "active_storage_blobs", force: :cascade do |t|
-    t.string "key", null: false
-    t.string "filename", null: false
-    t.string "content_type"
-    t.text "metadata"
     t.bigint "byte_size", null: false
     t.string "checksum"
+    t.string "content_type"
     t.datetime "created_at", precision: nil, null: false
+    t.string "filename", null: false
+    t.string "key", null: false
+    t.text "metadata"
     t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
@@ -53,39 +53,41 @@ ActiveRecord::Schema[8.0].define(version: 2022_10_19_211150) do
   end
 
   create_table "cookbooks", force: :cascade do |t|
-    t.string "name"
     t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.string "name"
     t.string "param"
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["param"], name: "index_cookbooks_on_param", unique: true
   end
 
   create_table "cooks", force: :cascade do |t|
-    t.bigint "recipe_id"
-    t.date "date"
     t.datetime "created_at", precision: nil, null: false
+    t.date "date"
+    t.bigint "recipe_id"
     t.datetime "updated_at", precision: nil, null: false
     t.index ["recipe_id"], name: "index_cooks_on_recipe_id"
   end
 
   create_table "recipes", force: :cascade do |t|
-    t.string "name"
-    t.string "link"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
     t.integer "cookbook_id"
-    t.integer "section_id"
-    t.date "last_cooked_on"
     t.integer "cooks_count", default: 0
+    t.datetime "created_at", precision: nil, null: false
+    t.date "last_cooked_on"
+    t.string "link"
+    t.string "name"
+    t.bigint "parent_id"
+    t.integer "section_id"
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["cookbook_id"], name: "index_recipes_on_cookbook_id"
+    t.index ["parent_id"], name: "index_recipes_on_parent_id"
     t.index ["section_id", "name"], name: "index_recipes_on_section_id_and_name"
   end
 
   create_table "sections", force: :cascade do |t|
-    t.string "name"
     t.bigint "cookbook_id"
-    t.integer "position"
     t.datetime "created_at", precision: nil, null: false
+    t.string "name"
+    t.integer "position"
     t.datetime "updated_at", precision: nil, null: false
     t.index ["cookbook_id", "position"], name: "index_sections_on_cookbook_id_and_position"
     t.index ["cookbook_id"], name: "index_sections_on_cookbook_id"
@@ -93,17 +95,18 @@ ActiveRecord::Schema[8.0].define(version: 2022_10_19_211150) do
 
   create_table "users", force: :cascade do |t|
     t.bigint "cookbook_id"
+    t.datetime "created_at", precision: nil, null: false
+    t.string "email"
     t.string "first_name"
     t.string "last_name"
-    t.string "email"
     t.string "password_digest"
-    t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["cookbook_id"], name: "index_users_on_cookbook_id"
   end
 
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "cooks", "recipes"
+  add_foreign_key "recipes", "recipes", column: "parent_id"
   add_foreign_key "sections", "cookbooks"
   add_foreign_key "users", "cookbooks"
 end

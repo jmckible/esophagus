@@ -4,10 +4,13 @@ class Recipe < ApplicationRecord
 
   belongs_to :cookbook
   belongs_to :section, optional: true
+  belongs_to :parent, class_name: 'Recipe', optional: true
 
   has_many :cooks, dependent: :destroy
+  has_many :variants, class_name: 'Recipe', foreign_key: :parent_id, dependent: :nullify
 
   scope :abc, ->{ reorder(name: :asc) }
+  scope :bases_only, ->{ where(parent_id: nil) }
 
   def favorite?
     cooks_count >= 12
@@ -23,6 +26,13 @@ class Recipe < ApplicationRecord
     days_since_last_cook >= 45 && days_since_last_cook > expected_interval * 2.5
   end
 
+  def family_last_cooked_on
+    return last_cooked_on if parent_id # variants show own date
+
+    # Base: compute max across self + all variants
+    Recipe.where(id: [id] + variant_ids).maximum(:last_cooked_on)
+  end
+
   private
 
   def expected_interval
@@ -35,4 +45,14 @@ class Recipe < ApplicationRecord
   end
 
   validates :name, presence: true
+  validate :cannot_be_own_parent
+  validate :parent_cannot_be_variant
+
+  def cannot_be_own_parent
+    errors.add(:parent_id, "cannot be self") if parent_id == id
+  end
+
+  def parent_cannot_be_variant
+    errors.add(:parent_id, "must be a base recipe") if parent&.parent_id
+  end
 end
