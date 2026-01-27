@@ -7,36 +7,32 @@
   %br
   %h2= section.name
   - if section.recipes.any?
-    %table.table.table-striped
+    .recipe-columns
       - section.recipes.bases_only.includes(:variants).abc.each do |recipe|
-        %tr
-          %td{width: '1em'}
+        .recipe-family
+          .recipe-item
             = fire_if recipe.favorite? && !recipe.forgotten?
             = forgotten_if recipe.forgotten?
-          %td= link_to recipe.name, recipe
+            = link_to recipe.name, recipe
 
-        - recipe.variants.sort_by(&:name).each do |variant|
-          %tr.variant-row
-            %td{width: '1em'}
+          - recipe.variants.sort_by(&:name).each do |variant|
+            .recipe-item.variant
               = fire_if variant.favorite? && !variant.forgotten?
               = forgotten_if variant.forgotten?
-            %td
-              %span.ms-3= link_to variant.name, variant
+              = link_to variant.name, variant
 
 - if Current.cookbook.recipes.where(section: nil).any?
   %h2 Uncategorized
-  %table.table.table-striped
+  .recipe-columns
     - Current.cookbook.recipes.where(section: nil).bases_only.includes(:variants).abc.each do |recipe|
-      %tr
-        %td{width: '1em'}
+      .recipe-family
+        .recipe-item
           = fire_if recipe.favorite? && !recipe.forgotten?
           = forgotten_if recipe.forgotten?
-        %td= link_to recipe.name, recipe
+          = link_to recipe.name, recipe
 
-      - recipe.variants.sort_by(&:name).each do |variant|
-        %tr.variant-row
-          %td{width: '1em'}
+        - recipe.variants.sort_by(&:name).each do |variant|
+          .recipe-item.variant
             = fire_if variant.favorite? && !variant.forgotten?
             = forgotten_if variant.forgotten?
-          %td
-            %span.ms-3= link_to variant.name, variant
+            = link_to variant.name, variant

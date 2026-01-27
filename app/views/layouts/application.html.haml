@@ -5,6 +5,7 @@
     = csrf_meta_tags
     = csp_meta_tag
     = action_cable_meta_tag
+    %meta{ name: 'turbo-prefetch', content: 'false' }
     = stylesheet_link_tag 'application', 'data-turbolinks-track': 'reload'
     = javascript_importmap_tags
     /= favicon_link_tag "favicons/#{Time.zone.now.mday}.png"
