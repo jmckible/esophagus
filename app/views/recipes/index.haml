@@ -19,7 +19,7 @@
                   %span.text-muted.last-cooked
                     = time_ago_in_words(recipe.family_last_cooked_on)
                     ago
-                - if recipe.link
+                - if recipe.link.present?
                   = link_to '🔗', recipe.link, class: 'link-icon', target: '_blank', rel: 'noopener'
 
           - recipe.variants.sort_by(&:name).each do |variant|
