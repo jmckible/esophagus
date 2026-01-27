@@ -1,18 +1,31 @@
 %h1 Sections
 
-= form_with model: @section, url: @section, data: { remote: true, turbo: false } do |f|
-  %p= f.text_field :position, placeholder: 'Position'
-  %p= f.text_field :name, placeholder: 'Name'
-  %p= f.submit 'Create'
+.mb-4
+  %h3 Add New Section
+  = form_with model: @section do |f|
+    .row.g-2
+      .col-auto.flex-grow-1
+        = f.text_field :name, placeholder: 'Section name', class: 'form-control'
+      .col-auto
+        = f.submit 'Create', class: 'btn btn-primary'
 
-%table
-  %tr
-    %th Position
-    %th Name
-    %th Update
-  - @sections.each do |s|
-    = form_with model: s, data: { remote: true, turbo: false } do |f|
-      %tr
-        %td= f.text_field :position
-        %td= f.text_field :name
-        %td= f.submit 'Update'
+.sections-table
+  .table-responsive{style: 'max-width: 800px'}
+    %table.table.table-sm.table-hover
+      %thead
+        %tr
+          %th{style: 'width: 80px'} Order
+          %th Name
+          %th{style: 'width: 100px'}
+      %tbody
+        - @sections.each_with_index do |section, index|
+          %tr
+            %td
+              .d-flex.gap-1
+                - unless section == @sections.first
+                  = button_to '↑', move_up_section_path(section), method: :patch, class: 'btn btn-sm btn-outline-secondary', style: 'padding: 0.1rem 0.4rem; line-height: 1', form: { data: { turbo: false } }
+                - unless section == @sections.last
+                  = button_to '↓', move_down_section_path(section), method: :patch, class: 'btn btn-sm btn-outline-secondary', style: 'padding: 0.1rem 0.4rem; line-height: 1', form: { data: { turbo: false } }
+            %td
+              = render 'display', section: section
+            %td

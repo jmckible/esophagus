@@ -13,7 +13,12 @@ Rails.application.routes.draw do
     resources :cooks, shallow: true
   end
 
-  resources :sections
+  resources :sections do
+    member do
+      patch :move_up
+      patch :move_down
+    end
+  end
 
   root to: 'recipes#index'
 end

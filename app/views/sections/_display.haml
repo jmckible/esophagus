@@ -1,0 +1,7 @@
+= turbo_frame_tag dom_id(section) do
+  .d-flex.align-items-center.gap-2
+    .section-name
+      = section.name
+    .section-actions.ms-auto.d-flex.gap-2
+      = link_to '✏️', edit_section_path(section), class: 'btn btn-sm btn-outline-secondary', title: 'Edit'
+      = button_to '🗑️', section_path(section), method: :delete, class: 'btn btn-sm btn-outline-danger', data: { turbo_confirm: 'Are you sure? Recipes in this section will become uncategorized.' }, title: 'Delete'
