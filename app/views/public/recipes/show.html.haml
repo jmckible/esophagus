@@ -1,9 +1,12 @@
-%h1= @recipe.display_name
+%h1.recipe-title{ class: [('favorite' if @recipe.favorite? && !@recipe.forgotten?), ('forgotten' if @recipe.forgotten?)].compact }
+  = @recipe.display_name
 
-%p= link_to 'Back', [:public, @recipe.cookbook]
-%p Section: #{@recipe.section&.name}
+.recipe-meta.mb-lg
+  = link_to 'Back', [:public, @recipe.cookbook], class: 'btn btn-secondary'
+  - if @recipe.section
+    %span.badge.badge-secondary= @recipe.section.name
+  - if @recipe.link
+    = link_to 'Open Link', @recipe.link, class: 'btn btn-secondary', target: '_blank', rel: 'noopener'
 
-- if @recipe.link
-  %p= link_to @recipe.link, @recipe.link
-
-= @recipe.instructions
+.recipe-instructions
+  = @recipe.instructions

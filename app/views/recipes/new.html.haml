@@ -1,16 +1,49 @@
-%h1 New Recipe
+.breadcrumb
+  = link_to 'Recipes', root_url
+  %span.separator /
+  %span.active New Recipe
+
+.page-header
+  %h1 New Recipe
 
 #recipe_form_container
   - if @recipe.errors.any?
-    .alert.alert-danger
-      %strong= pluralize(@recipe.errors.count, "error")
-      prevented this recipe from being saved:
+    #error_explanation
+      %h2
+        = pluralize(@recipe.errors.count, "error")
+        prevented this recipe from being saved:
       %ul
         - @recipe.errors.full_messages.each do |message|
           %li= message
 
-  = form_with model: @recipe do |f|
-    = render 'form', form: f
-    %p= f.submit 'Save'
+  = form_with model: @recipe, class: 'recipe-form' do |f|
+    .card.mb-lg
+      .card-header
+        Basic Info
+      .card-body
+        .form-group
+          = f.label :name, class: 'form-label'
+          = f.text_field :name, class: 'form-control', placeholder: 'Recipe name'
 
-  %p= link_to 'Back', root_url
+        .form-row
+          .form-group
+            = f.label :section_id, 'Section', class: 'form-label'
+            = f.collection_select :section_id, Current.cookbook.sections.by_position, :id, :name, {include_blank: 'Uncategorized'}, {class: 'form-control'}
+
+          .form-group
+            = f.label :parent_id, 'Variant of', class: 'form-label'
+            = f.collection_select :parent_id, Current.cookbook.recipes.bases_only.where(section: f.object.section).abc, :id, :name, {include_blank: 'None (base recipe)'}, {class: 'form-control'}
+
+        .form-group
+          = f.label :link, 'External Link', class: 'form-label'
+          = f.text_field :link, class: 'form-control', placeholder: 'https://example.com/recipe'
+
+    .card.mb-lg
+      .card-header
+        Instructions
+      .card-body
+        = f.rich_text_area :instructions, style: 'min-height: 15em'
+
+    .form-actions
+      = f.submit 'Create Recipe', class: 'btn btn-primary'
+      = link_to 'Cancel', root_url, class: 'btn btn-secondary'

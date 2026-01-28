@@ -1,13 +1,13 @@
 - sections.each_with_index do |section, index|
   %tr
-    %td
-      .d-flex.gap-1
+    %td.order-column
+      .section-controls
         - if section == sections.first
-          .btn.btn-sm{style: 'padding: 0.1rem 0.4rem; line-height: 1; visibility: hidden'} ↑
+          .btn.btn-sm{style: 'visibility: hidden'} ↑
         - else
-          = button_to '↑', move_up_section_path(section), method: :patch, class: 'btn btn-sm btn-outline-secondary', style: 'padding: 0.1rem 0.4rem; line-height: 1'
+          = button_to '↑', move_up_section_path(section), method: :patch, class: 'btn btn-secondary btn-sm', title: 'Move up'
         - unless section == sections.last
-          = button_to '↓', move_down_section_path(section), method: :patch, class: 'btn btn-sm btn-outline-secondary', style: 'padding: 0.1rem 0.4rem; line-height: 1'
-    %td
+          = button_to '↓', move_down_section_path(section), method: :patch, class: 'btn btn-secondary btn-sm', title: 'Move down'
+    %td.name-column
       = render 'display', section: section
-    %td
+    %td.actions-column

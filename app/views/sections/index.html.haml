@@ -1,21 +1,32 @@
-%h1 Sections
+.breadcrumb
+  = link_to 'Recipes', root_url
+  %span.separator /
+  %span.active Sections
 
-.mb-4
-  %h3 Add New Section
-  = form_with model: @section do |f|
-    .row.g-2
-      .col-auto.flex-grow-1
+.page-header
+  %h1 Sections
+  = link_to 'Back to Recipes', root_url, class: 'btn btn-secondary'
+
+.card.mb-lg
+  .card-header
+    Add New Section
+  .card-body
+    = form_with model: @section, class: 'inline-form' do |f|
+      .form-group
         = f.text_field :name, placeholder: 'Section name', class: 'form-control'
-      .col-auto
-        = f.submit 'Create', class: 'btn btn-primary'
+      = f.submit 'Create Section', class: 'btn btn-primary'
 
-.sections-table
-  .table-responsive{style: 'max-width: 800px'}
-    %table.table.table-sm.table-hover
-      %thead
-        %tr
-          %th{style: 'width: 80px'} Order
-          %th Name
-          %th{style: 'width: 100px'}
-      %tbody#sections-table-body
-        = render 'sections_rows', sections: @sections
+- if @sections.any?
+  .card.sections-card
+    .sections-table
+      %table.table
+        %thead
+          %tr
+            %th Order
+            %th Name
+            %th
+        %tbody#sections-table-body
+          = render 'sections_rows', sections: @sections
+- else
+  .empty-state
+    No sections yet. Create your first section to organize your recipes.

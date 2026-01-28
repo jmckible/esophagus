@@ -14,15 +14,11 @@
 
 
   %body
-    .container
-      %br
-      %br
+    .page-container
       - if flash[:notice]
-        .alert.alert-success.alert-dismissible.fade.show{role: 'alert'}
+        .alert.alert-success{ data: { turbo_temporary: true } }
           = flash[:notice]
-          %button.btn-close{type: 'button', data: { bs_dismiss: 'alert' }, aria: { label: 'Close' }}
       - if flash[:alert]
-        .alert.alert-danger.alert-dismissible.fade.show{role: 'alert'}
+        .alert.alert-danger{ data: { turbo_temporary: true } }
           = flash[:alert]
-          %button.btn-close{type: 'button', data: { bs_dismiss: 'alert' }, aria: { label: 'Close' }}
       = yield

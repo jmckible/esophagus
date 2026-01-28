@@ -1,71 +1,63 @@
-.d-flex.justify-content-between.mb-4
+.page-header
   = btn_to 'Add Recipe', [:new, :recipe]
   = btn_to 'Sections', :sections, type: 'secondary'
 
 - Current.cookbook.sections.by_position.each do |section|
-  %h2.mt-4.mb-3= section.name
+  %h2.section-header= section.name
   - if section.recipes.any?
     .recipe-columns
       - section.recipes.bases_only.includes(:variants).abc.each do |recipe|
         .recipe-family
-          .recipe-item
+          .recipe-item{ class: [('favorite' if recipe.favorite? && !recipe.forgotten?), ('forgotten' if recipe.forgotten?)].compact }
             .recipe-item-content
               .recipe-name
-                = fire_if recipe.favorite? && !recipe.forgotten?
-                = forgotten_if recipe.forgotten?
-                = link_to recipe.display_name, recipe
+                = link_to recipe.display_name, recipe, class: 'recipe-link'
               .recipe-meta
                 - if recipe.forgotten? && recipe.family_last_cooked_on
-                  %span.text-muted.last-cooked
+                  %span.last-cooked
                     = time_ago_in_words(recipe.family_last_cooked_on)
                     ago
                 - if recipe.link.present?
                   = link_to '🔗', recipe.link, class: 'link-icon', target: '_blank', rel: 'noopener'
 
           - recipe.variants.sort_by(&:name).each do |variant|
-            .recipe-item.variant
+            .recipe-item.variant{ class: [('favorite' if variant.favorite? && !variant.forgotten?), ('forgotten' if variant.forgotten?)].compact }
               .recipe-item-content
                 .recipe-name
-                  = fire_if variant.favorite? && !variant.forgotten?
-                  = forgotten_if variant.forgotten?
-                  = link_to variant.name, variant
+                  = link_to variant.name, variant, class: 'recipe-link'
                 .recipe-meta
                   - if variant.forgotten? && variant.family_last_cooked_on
-                    %span.text-muted.last-cooked
+                    %span.last-cooked
                       = time_ago_in_words(variant.family_last_cooked_on)
                       ago
                   - if variant.link
                     = link_to '🔗', variant.link, class: 'link-icon', target: '_blank', rel: 'noopener'
 
 - if Current.cookbook.recipes.where(section: nil).any?
-  %h2.mt-4.mb-3 Uncategorized
+  %h2.section-header Uncategorized
   .recipe-columns
     - Current.cookbook.recipes.where(section: nil).bases_only.includes(:variants).abc.each do |recipe|
       .recipe-family
-        .recipe-item
+        .recipe-item{ class: [('favorite' if recipe.favorite? && !recipe.forgotten?), ('forgotten' if recipe.forgotten?)].compact }
           .recipe-item-content
             .recipe-name
-              = fire_if recipe.favorite? && !recipe.forgotten?
-              = forgotten_if recipe.forgotten?
-              = link_to recipe.display_name, recipe
+              = link_to recipe.display_name, recipe, class: 'recipe-link'
             .recipe-meta
               - if recipe.forgotten? && recipe.family_last_cooked_on
-                %span.text-muted.last-cooked
+                %span.last-cooked
                   = time_ago_in_words(recipe.family_last_cooked_on)
                   ago
               - if recipe.link
                 = link_to '🔗', recipe.link, class: 'link-icon', target: '_blank', rel: 'noopener'
 
         - recipe.variants.sort_by(&:name).each do |variant|
-          .recipe-item.variant
+          .recipe-item.variant{ class: [('favorite' if variant.favorite? && !variant.forgotten?), ('forgotten' if variant.forgotten?)].compact }
             .recipe-item-content
               .recipe-name
-                = fire_if variant.favorite? && !variant.forgotten?
-                = forgotten_if variant.forgotten?
-                = link_to variant.name, variant
+                = link_to variant.name, variant, class: 'recipe-link'
               .recipe-meta
                 - if variant.forgotten? && variant.family_last_cooked_on
-                  %span.text-muted.last-cooked
+                  %span.last-cooked
                     = time_ago_in_words(variant.family_last_cooked_on)
                     ago
                 - if variant.link

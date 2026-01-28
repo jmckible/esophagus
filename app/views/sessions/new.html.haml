@@ -1,6 +1,13 @@
-= form_with url: authenticate_path do |f|
-  %p= f.text_field :email, placeholder: 'Email'
-  %p= f.password_field :password, placeholder: 'Password'
-  %p= f.submit 'Login'
+.login-form
+  %h1 Login
 
-%p= flash[:alert]
+  = form_with url: authenticate_path do |f|
+    .form-group
+      = f.label :email, class: 'form-label'
+      = f.text_field :email, placeholder: 'Email', class: 'form-control'
+
+    .form-group
+      = f.label :password, class: 'form-label'
+      = f.password_field :password, placeholder: 'Password', class: 'form-control'
+
+    = f.submit 'Login', class: 'btn btn-primary'

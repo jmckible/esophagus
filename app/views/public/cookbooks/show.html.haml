@@ -1,18 +1,16 @@
 - @cookbook.sections.by_position.each do |section|
-  %br
-  %br
-  %h2= section.name
+  %h2.section-header= section.name
   - if section.recipes.any?
     .recipe-columns
       - section.recipes.bases_only.includes(:variants).abc.each do |recipe|
         .recipe-family
-          .recipe-item
-            = fire_if recipe.favorite? && !recipe.forgotten?
-            = forgotten_if recipe.forgotten?
-            = link_to recipe.display_name, [:public, recipe]
+          .recipe-item{ class: [('favorite' if recipe.favorite? && !recipe.forgotten?), ('forgotten' if recipe.forgotten?)].compact }
+            .recipe-item-content
+              .recipe-name
+                = link_to recipe.display_name, [:public, recipe], class: 'recipe-link'
 
           - recipe.variants.sort_by(&:name).each do |variant|
-            .recipe-item.variant
-              = fire_if variant.favorite? && !variant.forgotten?
-              = forgotten_if variant.forgotten?
-              = link_to variant.name, [:public, variant]
+            .recipe-item.variant{ class: [('favorite' if variant.favorite? && !variant.forgotten?), ('forgotten' if variant.forgotten?)].compact }
+              .recipe-item-content
+                .recipe-name
+                  = link_to variant.name, [:public, variant], class: 'recipe-link'

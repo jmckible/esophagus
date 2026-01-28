@@ -1,8 +1,7 @@
 module ApplicationHelper
 
-  def btn_to(name, options, type: 'primary', style: '')
-    style = style + " btn btn-#{type}"
-    button_to name, options, class: style, method: :get
+  def btn_to(name, options, type: 'primary', **opts)
+    button_to name, options, class: "btn btn-#{type}", method: :get, **opts
   end
 
   def fire_if(boolean)
