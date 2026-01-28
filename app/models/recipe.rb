@@ -49,7 +49,7 @@ class Recipe < ApplicationRecord
   validate :parent_cannot_be_variant
 
   def cannot_be_own_parent
-    errors.add(:parent_id, "cannot be self") if parent_id == id
+    errors.add(:parent_id, "cannot be self") if !new_record? && parent_id == id
   end
 
   def parent_cannot_be_variant
