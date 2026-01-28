@@ -9,7 +9,7 @@
         - @recipe.errors.full_messages.each do |message|
           %li= message
 
-  = form_with model: @recipe, data: { turbo: false } do |f|
+  = form_with model: @recipe do |f|
     = render 'form', form: f
     %p= f.submit 'Save'
 

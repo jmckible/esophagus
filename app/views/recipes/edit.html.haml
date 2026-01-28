@@ -31,7 +31,7 @@
         - @recipe.errors.full_messages.each do |message|
           %li= message
 
-  = form_with model: @recipe, class: 'recipe-form', data: { turbo: false } do |f|
+  = form_with model: @recipe, class: 'recipe-form' do |f|
     .card.mb-3
       .card-header
         %strong Basic Info

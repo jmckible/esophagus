@@ -7,12 +7,10 @@ class SectionsController < ApplicationController
 
   def show
     @section = Current.cookbook.sections.find(params[:id])
-    fresh_when @section
   end
 
   def edit
     @section = Current.cookbook.sections.find(params[:id])
-    fresh_when @section
   end
 
   def create
@@ -25,9 +23,9 @@ class SectionsController < ApplicationController
   def update
     @section = Current.cookbook.sections.find(params[:id])
     if @section.update(params.fetch(:section, {}).permit(:name))
-      render turbo_stream: turbo_stream.replace(@section, partial: 'sections/display', locals: { section: @section })
+      render turbo_stream: turbo_stream.replace(@section, partial: 'sections/display', method: :morph, locals: { section: @section })
     else
-      render turbo_stream: turbo_stream.replace(@section, partial: 'sections/edit_form', locals: { section: @section }), status: :unprocessable_entity
+      render turbo_stream: turbo_stream.replace(@section, partial: 'sections/edit_form', method: :morph, locals: { section: @section }), status: :unprocessable_entity
     end
   end
 
@@ -50,7 +48,7 @@ class SectionsController < ApplicationController
     end
 
     @sections = Current.cookbook.sections.by_position
-    render turbo_stream: turbo_stream.update('sections-table-body', partial: 'sections_rows', locals: { sections: @sections })
+    render turbo_stream: turbo_stream.update('sections-table-body', partial: 'sections_rows', method: :morph, locals: { sections: @sections })
   end
 
   def move_down
@@ -66,7 +64,7 @@ class SectionsController < ApplicationController
     end
 
     @sections = Current.cookbook.sections.by_position
-    render turbo_stream: turbo_stream.update('sections-table-body', partial: 'sections_rows', locals: { sections: @sections })
+    render turbo_stream: turbo_stream.update('sections-table-body', partial: 'sections_rows', method: :morph, locals: { sections: @sections })
   end
 
 end
