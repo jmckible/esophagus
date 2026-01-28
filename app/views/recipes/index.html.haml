@@ -2,8 +2,18 @@
   = btn_to 'Add Recipe', [:new, :recipe]
   = btn_to 'Sections', :sections, type: 'secondary'
 
-- Current.cookbook.sections.by_position.each do |section|
-  %h2.section-header= section.name
+- sections = Current.cookbook.sections.by_position.to_a
+- has_uncategorized = Current.cookbook.recipes.where(section: nil).any?
+
+- if sections.size > 1 || has_uncategorized
+  .section-links
+    - sections.drop(1).each_with_index do |section, index|
+      = link_to section.name, "#section-#{section.id}", class: "section-link section-link-#{index % 6}"
+    - if has_uncategorized
+      = link_to 'Uncategorized', '#section-uncategorized', class: "section-link section-link-#{sections.size % 6}"
+
+- sections.each_with_index do |section, index|
+  %h2.section-header{ id: (index > 0 ? "section-#{section.id}" : nil) }= section.name
   - if section.recipes.any?
     .recipe-columns
       - section.recipes.bases_only.includes(:variants).abc.each do |recipe|
@@ -34,7 +44,7 @@
                     = link_to '🔗', variant.link, class: 'link-icon', target: '_blank', rel: 'noopener'
 
 - if Current.cookbook.recipes.where(section: nil).any?
-  %h2.section-header Uncategorized
+  %h2.section-header#section-uncategorized Uncategorized
   .recipe-columns
     - Current.cookbook.recipes.where(section: nil).bases_only.includes(:variants).abc.each do |recipe|
       .recipe-family

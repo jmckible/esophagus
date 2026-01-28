@@ -9,17 +9,17 @@
   --space-lg: 1.5rem;
   --space-xl: 2rem;
 
-  /* Colors - warm, scannable */
+  /* Colors - Light backgrounds with One Dark Pro accent palette */
   --color-bg: #fafafa;
   --color-surface: #ffffff;
   --color-border: #e5e7eb;
-  --color-primary: #ea580c;        /* Warm orange */
-  --color-primary-hover: #c2410c;
+  --color-primary: #61afef;        /* Blue accent */
+  --color-primary-hover: #4a9ad9;
   --color-text: #111827;
   --color-text-muted: #6b7280;
-  --color-success: #16a34a;
-  --color-danger: #dc2626;
-  --color-info: #0284c7;
+  --color-success: #98c379;
+  --color-danger: #e06c75;
+  --color-info: #56b6c2;
 
   /* Typography */
   --font-sans: system-ui, -apple-system, sans-serif;

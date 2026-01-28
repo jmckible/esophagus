@@ -201,6 +201,35 @@ textarea.form-control {
   text-decoration: underline;
 }
 
+/* Section badge with colors matching section links */
+.section-badge {
+  color: white;
+}
+
+.section-badge.section-color-0 {
+  background-color: #c678dd;  /* purple */
+}
+
+.section-badge.section-color-1 {
+  background-color: #e06c75;  /* red */
+}
+
+.section-badge.section-color-2 {
+  background-color: #d19a66;  /* orange */
+}
+
+.section-badge.section-color-3 {
+  background-color: #e5c07b;  /* yellow */
+}
+
+.section-badge.section-color-4 {
+  background-color: #98c379;  /* green */
+}
+
+.section-badge.section-color-5 {
+  background-color: #56b6c2;  /* cyan */
+}
+
 /* Breadcrumbs */
 .breadcrumb {
   display: flex;

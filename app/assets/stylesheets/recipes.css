@@ -1,5 +1,54 @@
 /* Recipe-specific styles */
 
+/* Section quick links */
+.section-links {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-lg);
+}
+
+.section-link {
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  transition: all 0.15s ease-in-out;
+  color: white;
+}
+
+.section-link:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+  filter: brightness(1.1);
+}
+
+/* Color variants - One Dark Pro palette (excluding blue which is used for primary buttons) */
+.section-link-0 {
+  background-color: #c678dd;  /* purple/magenta */
+}
+
+.section-link-1 {
+  background-color: #e06c75;  /* red */
+}
+
+.section-link-2 {
+  background-color: #d19a66;  /* orange */
+}
+
+.section-link-3 {
+  background-color: #e5c07b;  /* yellow */
+}
+
+.section-link-4 {
+  background-color: #98c379;  /* green */
+}
+
+.section-link-5 {
+  background-color: #56b6c2;  /* cyan */
+}
+
 /* Multi-column layout */
 .recipe-columns {
   column-count: 1;
@@ -221,8 +270,8 @@
 }
 
 .cook-form .form-group {
-  flex: 1;
   margin-bottom: 0;
+  max-width: 200px;
 }
 
 .cook-history-section {

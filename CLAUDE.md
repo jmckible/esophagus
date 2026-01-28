@@ -92,7 +92,6 @@ Nested cooks use shallow routing:
 - **Turbo 8 with morphing** for smooth page transitions and form submissions
 - **ActionText/Trix** for rich text recipe instructions
 - **Multi-column recipe layout** via `.recipe-columns` CSS class
-- **Emoji indicators**: `fire_if` (🔥), `forgotten_if` (👻) helpers
 
 Recipe families (parent + variants) display together in the UI.
 
@@ -128,27 +127,6 @@ This pattern prevents issues where morphing can conflict with Turbo Frame replac
 | `db/schema.rb` | Database structure: composite indexes, counter caches, self-referential FK |
 
 ## Technical Gotchas
-
-### HAML Template Naming (CRITICAL)
-**All HAML templates MUST use `.html.haml` extension, not just `.haml`**
-
-This includes:
-- Main templates: `new.html.haml`, `edit.html.haml`, `show.html.haml`, `index.html.haml`
-- Partials: `_form.html.haml`, `_display.html.haml`
-
-**Why this matters:**
-- Without `.html.`, Rails doesn't associate the template with HTML format
-- Templates render without the layout (no `<html>`, `<head>`, `<body>`)
-- Turbo receives partial content and appends it instead of morphing
-- Forms break completely with validation errors duplicating content
-
-**Symptoms of wrong naming:**
-- Form submissions append content to the page instead of replacing it
-- Validation errors show up outside `</body>` tag
-- Turbo morphing doesn't work
-- Layouts don't render
-
-Always use: `rails generate controller Foo index --template-engine=haml` or manually ensure `.html.haml` naming.
 
 ### Counter Cache on Cooks
 The `Cook` model uses `counter_cache: :cooks_count` on the `recipe` association. This means:

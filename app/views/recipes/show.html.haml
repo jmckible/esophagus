@@ -4,7 +4,10 @@
   = link_to 'Recipes', root_url
   %span.separator /
   - if @recipe.section
-    %span= @recipe.section.name
+    - sections = Current.cookbook.sections.by_position.to_a
+    - section_index = sections.index(@recipe.section)
+    - section_anchor = section_index == 0 ? root_url : root_url + "#section-#{@recipe.section.id}"
+    = link_to @recipe.section.name, section_anchor
     %span.separator /
   %span.active= @recipe.display_name
 
@@ -15,7 +18,8 @@
 
     .recipe-badges
       - if @recipe.section
-        %span.badge.badge-secondary= @recipe.section.name
+        - color_class = section_color_class(@recipe.section)
+        %span.badge{ class: color_class ? ['section-badge', color_class] : 'badge-secondary' }= @recipe.section.name
       - if @recipe.parent
         %span.badge.badge-info
           Variant of
