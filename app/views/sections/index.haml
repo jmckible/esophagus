@@ -17,15 +17,5 @@
           %th{style: 'width: 80px'} Order
           %th Name
           %th{style: 'width: 100px'}
-      %tbody
-        - @sections.each_with_index do |section, index|
-          %tr
-            %td
-              .d-flex.gap-1
-                - unless section == @sections.first
-                  = button_to '↑', move_up_section_path(section), method: :patch, class: 'btn btn-sm btn-outline-secondary', style: 'padding: 0.1rem 0.4rem; line-height: 1', form: { data: { turbo: false } }
-                - unless section == @sections.last
-                  = button_to '↓', move_down_section_path(section), method: :patch, class: 'btn btn-sm btn-outline-secondary', style: 'padding: 0.1rem 0.4rem; line-height: 1', form: { data: { turbo: false } }
-            %td
-              = render 'display', section: section
-            %td
+      %tbody#sections-table-body
+        = render 'sections_rows', sections: @sections

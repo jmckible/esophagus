@@ -3,16 +3,17 @@ class SectionsController < ApplicationController
   def index
     @section  = Section.new
     @sections = Current.cookbook.sections.by_position
+    fresh_when @sections
   end
 
   def show
     @section = Current.cookbook.sections.find(params[:id])
-    render layout: false
+    fresh_when @section
   end
 
   def edit
     @section = Current.cookbook.sections.find(params[:id])
-    render layout: false
+    fresh_when @section
   end
 
   def create
@@ -25,16 +26,16 @@ class SectionsController < ApplicationController
   def update
     @section = Current.cookbook.sections.find(params[:id])
     if @section.update(params.fetch(:section, {}).permit(:name))
-      render :show, layout: false
+      render turbo_stream: turbo_stream.replace(@section, partial: 'sections/display', locals: { section: @section })
     else
-      render :edit, layout: false, status: :unprocessable_content
+      render turbo_stream: turbo_stream.replace(@section, partial: 'sections/edit_form', locals: { section: @section }), status: :unprocessable_entity
     end
   end
 
   def destroy
     @section = Current.cookbook.sections.find(params[:id])
     @section.destroy
-    redirect_to sections_url
+    render turbo_stream: turbo_stream.remove(@section)
   end
 
   def move_up
@@ -49,7 +50,8 @@ class SectionsController < ApplicationController
       previous_section.save!
     end
 
-    redirect_to sections_path
+    @sections = Current.cookbook.sections.by_position
+    render turbo_stream: turbo_stream.update('sections-table-body', partial: 'sections_rows', locals: { sections: @sections })
   end
 
   def move_down
@@ -64,7 +66,8 @@ class SectionsController < ApplicationController
       next_section.save!
     end
 
-    redirect_to sections_path
+    @sections = Current.cookbook.sections.by_position
+    render turbo_stream: turbo_stream.update('sections-table-body', partial: 'sections_rows', locals: { sections: @sections })
   end
 
 end

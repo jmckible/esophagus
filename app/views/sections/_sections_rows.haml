@@ -1,0 +1,13 @@
+- sections.each_with_index do |section, index|
+  %tr
+    %td
+      .d-flex.gap-1
+        - if section == sections.first
+          .btn.btn-sm{style: 'padding: 0.1rem 0.4rem; line-height: 1; visibility: hidden'} ↑
+        - else
+          = button_to '↑', move_up_section_path(section), method: :patch, class: 'btn btn-sm btn-outline-secondary', style: 'padding: 0.1rem 0.4rem; line-height: 1'
+        - unless section == sections.last
+          = button_to '↓', move_down_section_path(section), method: :patch, class: 'btn btn-sm btn-outline-secondary', style: 'padding: 0.1rem 0.4rem; line-height: 1'
+    %td
+      = render 'display', section: section
+    %td

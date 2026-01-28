@@ -89,12 +89,32 @@ Nested cooks use shallow routing:
 ### View Patterns
 
 - **HAML templates** with Bootstrap 5 for styling
-- **Turbo-Rails** for AJAX-like interactions (form submissions without page reload)
+- **Turbo 8 with morphing** for smooth page transitions and form submissions
 - **ActionText/Trix** for rich text recipe instructions
 - **Multi-column recipe layout** via `.recipe-columns` CSS class
 - **Emoji indicators**: `fire_if` (🔥), `forgotten_if` (👻) helpers
 
 Recipe families (parent + variants) display together in the UI.
+
+### Turbo 8 Architecture
+
+The application uses **Turbo 8's page-level morphing** (idiomorph) for smooth navigation without full page reloads. Morphing surgically updates only changed DOM elements while preserving scroll position and unchanged state.
+
+**Global Configuration** (`app/views/layouts/application.html.haml`):
+```haml
+= turbo_refreshes_with method: :morph, scroll: :preserve
+```
+
+**HTTP Caching with ETags**: Controllers use `fresh_when` to generate ETags for cacheable pages. Turbo's prefetch sends conditional requests (`If-None-Match`), and Rails returns 304 responses when content hasn't changed, making navigation instant with zero data transfer.
+
+**Turbo Streams for Inline Editing**: Sections use a hybrid approach:
+- **Edit/Cancel links** → Normal Turbo Frame navigation (GET requests with `layout: false` extraction)
+- **Form submission** → Turbo Stream responses to replace frame content (avoids morphing conflicts)
+- **Create/Move/Destroy** → Turbo Stream responses to update table rows or tbody
+
+This pattern prevents issues where morphing can conflict with Turbo Frame replacements on form submissions.
+
+**Prefetch Caveats**: Prefetch is enabled globally and works great for navigation links. However, links that return Turbo Streams (action links) should have `data: { turbo_prefetch: false }` to prevent streams from executing on hover.
 
 ## Key Files
 
@@ -103,6 +123,7 @@ Recipe families (parent + variants) display together in the UI.
 | `app/models/recipe.rb` | Core business logic: favorites, forgotten recipes, family relationships |
 | `app/models/current.rb` | CurrentAttributes for user/cookbook context |
 | `app/controllers/concerns/authentication.rb` | Login enforcement |
+| `app/views/layouts/application.html.haml` | Global Turbo 8 morphing configuration |
 | `config/routes.rb` | Routing: public namespace, nested resources, path shortcuts |
 | `db/schema.rb` | Database structure: composite indexes, counter caches, self-referential FK |
 
@@ -122,8 +143,48 @@ When querying recipe families, remember that `family_last_cooked_on` is not a da
 
 This means you can't sort by `family_last_cooked_on` in SQL. Load recipes first, then sort in Ruby.
 
-### Turbo Prefetching
-`turbo:prefetch` is disabled in the layout (`data-turbo-preload="false"`) to avoid unnecessary requests. Re-enable selectively on high-traffic links if needed.
+### Turbo Frames and Morphing
+When using Turbo Frames for inline editing with global morphing enabled, form submissions can append content instead of replacing it. The solution is to return Turbo Streams from the update action:
+
+```ruby
+def update
+  if @section.update(params)
+    render turbo_stream: turbo_stream.replace(@section, partial: 'display', locals: { section: @section })
+  else
+    render turbo_stream: turbo_stream.replace(@section, partial: 'edit_form', locals: { section: @section }), status: :unprocessable_entity
+  end
+end
+```
+
+For actions that update multiple elements or complex table structures, replace the container:
+```ruby
+render turbo_stream: turbo_stream.update('table-body-id', partial: 'rows', locals: { items: @items })
+```
+
+### Turbo Stream vs Redirect Patterns
+- **Turbo Streams**: Use when updating specific DOM elements (inline editing, row operations, removals)
+- **Redirects with morphing**: Use for simple create/update flows that navigate to a show/index page
+- **Hybrid approach**: Build full pages with layouts, use Turbo Frames for inline editing, return Turbo Streams from update actions
+
+### Turbo Form Error Handling
+Forms use standard Rails validation patterns. On validation errors, controllers render the form with `status: :unprocessable_entity`, which tells Turbo to replace the form in place while showing inline errors. For example:
+
+```ruby
+def update
+  if @recipe.update(recipe_params)
+    redirect_to @recipe, notice: 'Recipe updated'
+  else
+    render :edit, status: :unprocessable_entity
+  end
+end
+```
+
+### ETag Caching Strategy
+Controllers add `fresh_when` to show/index actions:
+- **Single record**: `fresh_when @recipe` (uses record's `cache_key`)
+- **Collection**: `fresh_when @recipes.load` (loads collection and generates ETag from all records)
+
+When records update, their `updated_at` changes, invalidating the ETag. Turbo prefetch then fetches fresh data.
 
 ### RuboCop Configuration
 The `.rubocop.yml` is extremely permissive (most cops disabled). This is intentional for a personal project. Don't expect strict style enforcement.

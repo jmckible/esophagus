@@ -22,7 +22,7 @@
   - if @recipe.persisted?
     = button_to 'Delete', @recipe, method: :delete, class: 'btn btn-outline-danger', data: { confirm: 'Are you sure? This cannot be undone.' }
 
-= form_with model: @recipe, data: { remote: true, turbo: false }, class: 'recipe-form' do |f|
+= form_with model: @recipe, class: 'recipe-form' do |f|
   .card.mb-3
     .card-header
       %strong Basic Info
