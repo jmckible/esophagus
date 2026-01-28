@@ -1,18 +1,18 @@
-= content_for :title, @recipe.name
+= content_for :title, @recipe.display_name
 
 %nav{'aria-label': 'breadcrumb'}
   %ol.breadcrumb
     %li.breadcrumb-item= link_to 'Recipes', root_url
     - if @recipe.section
       %li.breadcrumb-item= @recipe.section.name
-    %li.breadcrumb-item.active= @recipe.name
+    %li.breadcrumb-item.active= @recipe.display_name
 
 .d-flex.justify-content-between.align-items-start.mb-4
   %div
     %h1.mb-2
       = fire_if @recipe.favorite? && !@recipe.forgotten?
       = forgotten_if @recipe.forgotten?
-      = @recipe.name
+      = @recipe.display_name
 
     .mb-2
       - if @recipe.section
@@ -44,7 +44,7 @@
     .card-body
       - @recipe.variants.abc.each do |variant|
         %div
-          = link_to variant.name, variant
+          = link_to variant.display_name, variant
 
 = @recipe.instructions
 

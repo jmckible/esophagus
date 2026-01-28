@@ -9,7 +9,7 @@
           .recipe-item
             = fire_if recipe.favorite? && !recipe.forgotten?
             = forgotten_if recipe.forgotten?
-            = link_to recipe.name, [:public, recipe]
+            = link_to recipe.display_name, [:public, recipe]
 
           - recipe.variants.sort_by(&:name).each do |variant|
             .recipe-item.variant

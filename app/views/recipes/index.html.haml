@@ -13,7 +13,7 @@
               .recipe-name
                 = fire_if recipe.favorite? && !recipe.forgotten?
                 = forgotten_if recipe.forgotten?
-                = link_to recipe.name, recipe
+                = link_to recipe.display_name, recipe
               .recipe-meta
                 - if recipe.forgotten? && recipe.family_last_cooked_on
                   %span.text-muted.last-cooked
@@ -47,7 +47,7 @@
             .recipe-name
               = fire_if recipe.favorite? && !recipe.forgotten?
               = forgotten_if recipe.forgotten?
-              = link_to recipe.name, recipe
+              = link_to recipe.display_name, recipe
             .recipe-meta
               - if recipe.forgotten? && recipe.family_last_cooked_on
                 %span.text-muted.last-cooked

@@ -1,4 +1,4 @@
-%h1= @recipe.name
+%h1= @recipe.display_name
 
 %p= link_to 'Back', [:public, @recipe.cookbook]
 %p Section: #{@recipe.section&.name}

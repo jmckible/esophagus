@@ -12,6 +12,10 @@ class Recipe < ApplicationRecord
   scope :abc, ->{ reorder(name: :asc) }
   scope :bases_only, ->{ where(parent_id: nil) }
 
+  def display_name
+    parent ? "#{parent.name} - #{name}" : name
+  end
+
   def favorite?
     cooks_count >= 12
   end
