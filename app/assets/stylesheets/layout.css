@@ -23,8 +23,12 @@
 
 /* Section Header */
 .section-header {
-  margin-top: var(--space-xl);
+  margin-top: calc(var(--space-xl) * 2);
   margin-bottom: var(--space-lg);
+  font-size: calc(var(--text-xl) * 1.2);
+  font-weight: var(--weight-semibold);
+  padding-bottom: var(--space-sm);
+  border-bottom: 2px solid var(--color-border);
 }
 
 .section-header:first-child {
