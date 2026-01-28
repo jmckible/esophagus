@@ -197,6 +197,14 @@ Deploys to **Fly.io** with auto-scaling to zero:
 - Release command: `bin/rails db:prepare`
 - Static assets served by Propshaft
 
+### Viewing Logs
+
+**IMPORTANT**: `fly logs` follows the log stream (like `tail -f`) and runs indefinitely. You must manually interrupt it (Ctrl+C) or it will run forever. To view recent logs without following:
+
+```bash
+fly logs --app esophagus | head -100  # View last 100 lines then exit
+```
+
 ## Development Philosophy
 
 This is a personal project without automated tests. The development style emphasizes:

@@ -17,4 +17,12 @@
     .container
       %br
       %br
+      - if flash[:notice]
+        .alert.alert-success.alert-dismissible.fade.show{role: 'alert'}
+          = flash[:notice]
+          %button.btn-close{type: 'button', data: { bs_dismiss: 'alert' }, aria: { label: 'Close' }}
+      - if flash[:alert]
+        .alert.alert-danger.alert-dismissible.fade.show{role: 'alert'}
+          = flash[:alert]
+          %button.btn-close{type: 'button', data: { bs_dismiss: 'alert' }, aria: { label: 'Close' }}
       = yield

@@ -22,37 +22,46 @@
   - if @recipe.persisted?
     = button_to 'Delete', @recipe, method: :delete, class: 'btn btn-outline-danger', data: { confirm: 'Are you sure? This cannot be undone.' }
 
-= form_with model: @recipe, class: 'recipe-form' do |f|
-  .card.mb-3
-    .card-header
-      %strong Basic Info
-    .card-body
-      .mb-3
-        = f.label :name, class: 'form-label'
-        = f.text_field :name, class: 'form-control', placeholder: 'Recipe name'
+#recipe_form_container
+  - if @recipe.errors.any?
+    .alert.alert-danger.mb-3
+      %strong= pluralize(@recipe.errors.count, "error")
+      prevented this recipe from being saved:
+      %ul.mb-0
+        - @recipe.errors.full_messages.each do |message|
+          %li= message
 
-      .row
-        .col-md-6.mb-3
-          = f.label :section_id, 'Section', class: 'form-label'
-          = f.collection_select :section_id, Current.cookbook.sections.by_position, :id, :name, {include_blank: 'Uncategorized'}, {class: 'form-select'}
+  = form_with model: @recipe, class: 'recipe-form', data: { turbo: false } do |f|
+    .card.mb-3
+      .card-header
+        %strong Basic Info
+      .card-body
+        .mb-3
+          = f.label :name, class: 'form-label'
+          = f.text_field :name, class: 'form-control', placeholder: 'Recipe name'
 
-        .col-md-6.mb-3
-          = f.label :parent_id, 'Variant of', class: 'form-label'
-          - disabled = f.object.persisted? && f.object.variants.any?
-          = f.collection_select :parent_id, Current.cookbook.recipes.bases_only.where(section: f.object.section).abc, :id, :name, {include_blank: 'None (base recipe)'}, {class: 'form-select', disabled: disabled}
-          - if disabled
-            .form-text.text-warning Cannot change - recipe has variants
+        .row
+          .col-md-6.mb-3
+            = f.label :section_id, 'Section', class: 'form-label'
+            = f.collection_select :section_id, Current.cookbook.sections.by_position, :id, :name, {include_blank: 'Uncategorized'}, {class: 'form-select'}
 
-      .mb-3
-        = f.label :link, 'External Link', class: 'form-label'
-        = f.text_field :link, class: 'form-control', placeholder: 'https://example.com/recipe'
+          .col-md-6.mb-3
+            = f.label :parent_id, 'Variant of', class: 'form-label'
+            - disabled = f.object.persisted? && f.object.variants.any?
+            = f.collection_select :parent_id, Current.cookbook.recipes.bases_only.where(section: f.object.section).abc, :id, :name, {include_blank: 'None (base recipe)'}, {class: 'form-select', disabled: disabled}
+            - if disabled
+              .form-text.text-warning Cannot change - recipe has variants
 
-  .card.mb-3
-    .card-header
-      %strong Instructions
-    .card-body
-      = f.rich_text_area :instructions, style: 'min-height: 15em'
+        .mb-3
+          = f.label :link, 'External Link', class: 'form-label'
+          = f.text_field :link, class: 'form-control', placeholder: 'https://example.com/recipe'
 
-  .d-flex.gap-2
-    = f.submit 'Save Changes', class: 'btn btn-primary btn-lg'
-    = link_to 'Cancel', @recipe, class: 'btn btn-outline-secondary btn-lg'
+    .card.mb-3
+      .card-header
+        %strong Instructions
+      .card-body
+        = f.rich_text_area :instructions, style: 'min-height: 15em'
+
+    .d-flex.gap-2
+      = f.submit 'Save Changes', class: 'btn btn-primary btn-lg'
+      = link_to 'Cancel', @recipe, class: 'btn btn-outline-secondary btn-lg'

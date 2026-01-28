@@ -23,7 +23,7 @@ class RecipesController < ApplicationController
     if @recipe.save
       redirect_to root_url, notice: 'Recipe created'
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -32,14 +32,18 @@ class RecipesController < ApplicationController
     if @recipe.update(recipe_params)
       redirect_to @recipe, notice: 'Recipe updated'
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
   protected
 
   def recipe_params
-    params.fetch(:recipe, {}).permit(:name, :link, :instructions, :section_id, :parent_id)
+    permitted = params.fetch(:recipe, {}).permit(:name, :link, :instructions, :section_id, :parent_id)
+    # Convert empty string to nil for association fields
+    permitted[:section_id] = nil if permitted[:section_id].blank?
+    permitted[:parent_id] = nil if permitted[:parent_id].blank?
+    permitted
   end
 
 end

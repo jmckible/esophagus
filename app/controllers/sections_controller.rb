@@ -3,7 +3,6 @@ class SectionsController < ApplicationController
   def index
     @section  = Section.new
     @sections = Current.cookbook.sections.by_position
-    fresh_when @sections
   end
 
   def show
