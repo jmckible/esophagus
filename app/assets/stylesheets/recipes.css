@@ -3,19 +3,20 @@
 /* Section quick links */
 .section-links {
   display: flex;
-  gap: var(--space-sm);
+  gap: var(--space-xs);
   flex-wrap: wrap;
   margin-bottom: var(--space-lg);
 }
 
 .section-link {
-  padding: var(--space-xs) var(--space-md);
-  border-radius: var(--radius-md);
+  padding: 0.25rem 0.625rem;
+  border-radius: var(--radius-sm);
   text-decoration: none;
-  font-size: var(--text-sm);
+  font-size: 0.8125rem;
   font-weight: var(--weight-medium);
   transition: all 0.15s ease-in-out;
   color: white;
+  white-space: nowrap;
 }
 
 .section-link:hover {
@@ -24,9 +25,9 @@
   filter: brightness(1.1);
 }
 
-/* Color variants - One Dark Pro palette (excluding blue which is used for primary buttons) */
+/* Color variants - Expanded One Dark Pro palette (excluding blue which is used for primary buttons) */
 .section-link-0 {
-  background-color: #c678dd;  /* purple/magenta */
+  background-color: #c678dd;  /* purple */
 }
 
 .section-link-1 {
@@ -34,19 +35,47 @@
 }
 
 .section-link-2 {
-  background-color: #d19a66;  /* orange */
+  background-color: #e86c8b;  /* pink */
 }
 
 .section-link-3 {
-  background-color: #e5c07b;  /* yellow */
+  background-color: #d19a66;  /* orange */
 }
 
 .section-link-4 {
-  background-color: #98c379;  /* green */
+  background-color: #e5c07b;  /* yellow */
 }
 
 .section-link-5 {
+  background-color: #98c379;  /* green */
+}
+
+.section-link-6 {
+  background-color: #4db380;  /* teal */
+}
+
+.section-link-7 {
   background-color: #56b6c2;  /* cyan */
+}
+
+.section-link-8 {
+  background-color: #a89984;  /* tan/brown */
+}
+
+.section-link-9 {
+  background-color: #b16286;  /* violet */
+}
+
+.section-link-10 {
+  background-color: #d75f5f;  /* coral/salmon */
+}
+
+.section-link-11 {
+  background-color: #ab9df2;  /* light purple */
+}
+
+.section-link-12 {
+  background-color: #7da87b;  /* sage green */
 }
 
 /* Multi-column layout */

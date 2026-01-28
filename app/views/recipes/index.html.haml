@@ -7,10 +7,11 @@
 
 - if sections.size > 1 || has_uncategorized
   .section-links
-    - sections.drop(1).each_with_index do |section, index|
-      = link_to section.name, "#section-#{section.id}", class: "section-link section-link-#{index % 6}"
+    - sections.drop(1).each do |section|
+      = link_to section.name, "#section-#{section.id}", class: ['section-link', section.link_color_class]
     - if has_uncategorized
-      = link_to 'Uncategorized', '#section-uncategorized', class: "section-link section-link-#{sections.size % 6}"
+      - uncategorized_color_index = (sections.size - 1) % Section::COLOR_COUNT
+      = link_to 'Uncategorized', '#section-uncategorized', class: "section-link section-link-#{uncategorized_color_index}"
 
 - sections.each_with_index do |section, index|
   %h2.section-header{ id: (index > 0 ? "section-#{section.id}" : nil) }= section.name

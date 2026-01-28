@@ -17,17 +17,7 @@ module ApplicationHelper
   end
 
   def section_color_class(section)
-    return nil unless section
-
-    # Find section's index in the ordered list
-    sections = section.cookbook.sections.by_position.to_a
-    section_index = sections.index(section)
-
-    # Calculate color index (skip first section like on homepage)
-    return nil if section_index == 0
-    color_index = (section_index - 1) % 6
-
-    "section-color-#{color_index}"
+    section&.color_class
   end
 
 end
