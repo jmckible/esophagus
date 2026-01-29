@@ -1,0 +1,9 @@
+- if recipe.cooks.any?
+  .cook-history-section
+    .cook-history-header History
+    .cook-history
+      - recipe.cooks.order(date: :desc).first(20).each do |c|
+        .cook-entry
+          .cook-date
+            = local_time(c.date, '%B %e, %Y')
+            = button_to '×', c, method: :delete, class: 'cook-delete', data: { turbo_confirm: 'Remove this cook?' }

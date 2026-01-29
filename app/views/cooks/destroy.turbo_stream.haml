@@ -1,0 +1,5 @@
+= turbo_stream.update 'recipe-stats' do
+  = render 'recipes/stats', recipe: @recipe
+
+= turbo_stream.update 'cook-history' do
+  = render 'recipes/cook_history', recipe: @recipe

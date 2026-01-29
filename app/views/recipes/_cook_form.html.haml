@@ -1,0 +1,5 @@
+= form_with model: [recipe, Cook.new(date: Date.today)], class: 'cook-form' do |f|
+  .form-group
+    = f.label :date, class: 'form-label'
+    = f.date_field :date, value: Date.today, class: 'form-control'
+  = f.submit 'Log Cook', class: 'btn btn-primary'

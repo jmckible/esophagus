@@ -4,13 +4,14 @@ class CooksController < ApplicationController
     @recipe = Current.cookbook.recipes.find params[:recipe_id]
     @cook = @recipe.cooks.build params.fetch(:cook, {}).permit(:date)
     @cook.save
-    redirect_to @recipe
+    @recipe.reload
   end
 
   def destroy
     @cook = Current.cookbook.cooks.find params[:id]
+    @recipe = @cook.recipe
     @cook.destroy
-    redirect_to @cook.recipe
+    @recipe.reload
   end
 
 end

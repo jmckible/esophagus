@@ -5,3 +5,5 @@ import 'trix'
 import '@rails/actiontext'
 import LocalTime from 'local-time'
 LocalTime.start()
+// TODO: Fix timezone detection - currently breaking Turbo
+// import 'sprinkles/time_zone'

@@ -28,10 +28,8 @@
         %span.badge.badge-info
           = pluralize(@recipe.variants.count, 'variant')
 
-    .recipe-stats
-      Prepared #{pluralize(@recipe.cooks.count, 'time')}
-      - if @recipe.family_last_cooked_on
-        • Last: #{local_time(@recipe.family_last_cooked_on, '%B %e, %Y')}
+    #recipe-stats
+      = render 'recipes/stats', recipe: @recipe
 
   .recipe-actions
     = link_to 'Edit', [:edit, @recipe], class: 'btn btn-primary'
@@ -50,24 +48,13 @@
 .recipe-instructions
   = @recipe.instructions
 
-.card.cook-log-card
+.card.cook-log-card{ data: { controller: 'preserve-scroll' } }
   .card-header
     Cooking Log
   .card-body
-    .cook-log-form-section
-      = form_with model: Cook.new(date: Date.today), url: [@recipe, :cooks], class: 'cook-form' do |f|
-        .form-group
-          = f.label :date, class: 'form-label'
-          = f.date_field :date, value: Date.today, class: 'form-control'
-        = f.submit 'Log Cook', class: 'btn btn-primary'
+    #cook-form.cook-log-form-section
+      = render 'recipes/cook_form', recipe: @recipe
 
-    - if @recipe.cooks.any?
-      .cook-history-section
-        .cook-history-header History
-        .cook-history
-          - @recipe.cooks.order(date: :desc).first(20).each do |c|
-            .cook-entry
-              .cook-date
-                = local_time(c.date, '%B %e, %Y')
-                = button_to '×', c, method: :delete, class: 'cook-delete', data: { turbo_confirm: 'Remove this cook?' }
+    #cook-history
+      = render 'recipes/cook_history', recipe: @recipe
 
