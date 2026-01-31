@@ -1,4 +1,4 @@
 .recipe-stats
   Prepared #{pluralize(recipe.cooks.count, 'time')}
   - if recipe.family_last_cooked_on
-    • Last: #{local_time(recipe.family_last_cooked_on, '%B %e, %Y')}
+    • Last: #{recipe.family_last_cooked_on.strftime('%B %e, %Y')}

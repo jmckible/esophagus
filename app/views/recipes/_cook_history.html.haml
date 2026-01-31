@@ -5,5 +5,5 @@
       - recipe.cooks.order(date: :desc).first(20).each do |c|
         .cook-entry
           .cook-date
-            = local_time(c.date, '%B %e, %Y')
+            = c.date.strftime('%B %e, %Y')
             = button_to '×', c, method: :delete, class: 'cook-delete', data: { turbo_confirm: 'Remove this cook?' }

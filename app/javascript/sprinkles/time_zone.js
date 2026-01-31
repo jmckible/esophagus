@@ -1,4 +1,4 @@
-import jstz from 'jstz'
 import Cookies from 'js-cookie'
 
-Cookies.set('time_zone', jstz.determine().name(), {expires: 365, path: '/'})
+const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+Cookies.set('time_zone', timeZone, {expires: 365, path: '/'})
