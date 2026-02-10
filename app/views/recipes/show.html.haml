@@ -32,9 +32,9 @@
       = render 'recipes/stats', recipe: @recipe
 
   .recipe-actions
-    = link_to 'Edit', [:edit, @recipe], class: 'btn btn-primary'
     - if @recipe.link
-      = link_to 'Open Link', @recipe.link, class: 'btn btn-secondary', target: '_blank', rel: 'noopener'
+      = link_to 'Open Link', @recipe.link, class: 'btn btn-primary', target: '_blank', rel: 'noopener'
+    = link_to 'Edit', [:edit, @recipe], class: 'recipe-edit-link'
 
 - if @recipe.variants.any?
   .card.mb-lg
