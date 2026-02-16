@@ -70,3 +70,7 @@ end
 | `app/models/current.rb` | CurrentAttributes for user/cookbook |
 | `app/controllers/concerns/authentication.rb` | Login enforcement |
 | `config/routes.rb` | Public namespace, nested resources, path shortcuts |
+
+## Deployment
+
+Deploys to production are automatically triggered by pushing the `main` branch to GitHub via an Action. Production is at https://es.ophag.us
