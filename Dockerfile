@@ -36,7 +36,7 @@ RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 FROM base
 
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl imagemagick libvips && \
+    apt-get install --no-install-recommends -y curl imagemagick libvips sqlite3 && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 COPY --from=build /usr/local/bundle /usr/local/bundle
