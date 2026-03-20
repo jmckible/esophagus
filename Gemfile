@@ -6,14 +6,16 @@ ruby '3.4.7'
 
 gem 'bcrypt', '3.1.20'
 gem 'bootsnap', '1.18.6', require: false
+gem 'kamal'
 gem 'haml', '7.0.1'
 gem 'image_processing', '1.14.0'
 gem 'importmap-rails', '2.2.2'
-gem 'pg', '1.6.2'
+gem 'sqlite3'
 gem 'propshaft', '1.3.1'
 gem 'puma', '7.1.0'
 gem 'rails', '8.1.1'
 gem 'stimulus-rails', '1.3.4'
+gem 'thruster'
 gem 'turbo-rails', '2.0.20'
 
 group :development do

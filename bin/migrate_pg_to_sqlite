@@ -1,0 +1,169 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Migrates data from a PostgreSQL database to the local SQLite database.
+#
+# Prerequisites:
+#   1. Proxy the Fly Postgres to localhost:
+#      fly proxy 15432:5432 --app esophagus-db
+#   2. Get the password:
+#      fly ssh console --app esophagus-db -C "printenv DATABASE_URL"
+#   3. Run this script:
+#      DATABASE_URL="postgres://esophagus:PASSWORD@localhost:15432/esophagus" ruby bin/migrate_pg_to_sqlite
+
+require "bundler/inline"
+
+gemfile do
+  source "https://rubygems.org"
+  gem "pg"
+  gem "sqlite3"
+end
+require "json"
+
+DATABASE_URL = ENV.fetch("DATABASE_URL")
+SQLITE_PATH = File.expand_path("../storage/development.sqlite3", __dir__)
+
+TABLES = %w[
+  cookbooks
+  users
+  sections
+  recipes
+  cooks
+  active_storage_blobs
+  active_storage_attachments
+  active_storage_variant_records
+  action_text_rich_texts
+].freeze
+
+pg = PG.connect(DATABASE_URL)
+sqlite = SQLite3::Database.new(SQLITE_PATH)
+
+sqlite.execute("PRAGMA journal_mode=WAL")
+sqlite.execute("PRAGMA foreign_keys=OFF")
+
+TABLES.each do |table|
+  rows = pg.exec("SELECT * FROM #{table}")
+
+  if rows.ntuples.zero?
+    puts "#{table}: 0 rows (skipped)"
+    next
+  end
+
+  columns = rows.fields
+  placeholders = columns.map { "?" }.join(", ")
+  sql = "INSERT INTO #{table} (#{columns.join(', ')}) VALUES (#{placeholders})"
+
+  sqlite.transaction do
+    rows.each do |row|
+      values = columns.map do |col|
+        value = row[col]
+        next nil if value.nil?
+
+        type_oid = rows.ftype(rows.fnumber(col))
+        case type_oid
+        when 20, 21, 23 # int8, int2, int4
+          value.to_i
+        when 1700 # numeric
+          value.to_f
+        else
+          value
+        end
+      end
+      sqlite.execute(sql, values)
+    end
+  end
+
+  puts "#{table}: #{rows.ntuples} rows"
+end
+
+sqlite.execute("PRAGMA foreign_keys=ON")
+
+# Verify counts match
+puts "\n--- Verification ---"
+all_ok = true
+
+TABLES.each do |table|
+  pg_count = pg.exec("SELECT COUNT(*) FROM #{table}").getvalue(0, 0).to_i
+  sqlite_count = sqlite.execute("SELECT COUNT(*) FROM #{table}").first.first
+
+  status = pg_count == sqlite_count ? "OK" : "MISMATCH"
+  puts "#{table}: pg=#{pg_count} sqlite=#{sqlite_count} [#{status}]"
+  all_ok = false if pg_count != sqlite_count
+end
+
+# Verify foreign key integrity
+fk_errors = sqlite.execute("PRAGMA foreign_key_check")
+if fk_errors.empty?
+  puts "\nForeign key integrity: OK"
+else
+  puts "\nForeign key violations:"
+  fk_errors.each { |e| puts "  #{e.inspect}" }
+  all_ok = false
+end
+
+# Verify specific data integrity
+puts "\n--- Spot Checks ---"
+
+# Check counter caches match actual cook counts
+mismatches = sqlite.execute(<<~SQL)
+  SELECT r.id, r.name, r.cooks_count, COUNT(c.id) AS actual
+  FROM recipes r
+  LEFT JOIN cooks c ON c.recipe_id = r.id
+  GROUP BY r.id
+  HAVING r.cooks_count != COUNT(c.id)
+SQL
+
+if mismatches.empty?
+  puts "Counter caches: OK"
+else
+  puts "Counter cache mismatches:"
+  mismatches.each { |r| puts "  Recipe #{r[0]} (#{r[1]}): cached=#{r[2]} actual=#{r[3]}" }
+  all_ok = false
+end
+
+# Check all recipes belong to valid cookbooks
+orphans = sqlite.execute(<<~SQL)
+  SELECT r.id, r.name FROM recipes r
+  LEFT JOIN cookbooks c ON c.id = r.cookbook_id
+  WHERE r.cookbook_id IS NOT NULL AND c.id IS NULL
+SQL
+
+if orphans.empty?
+  puts "Recipe-cookbook references: OK"
+else
+  puts "Orphaned recipes: #{orphans.inspect}"
+  all_ok = false
+end
+
+# Check parent_id references are valid
+bad_parents = sqlite.execute(<<~SQL)
+  SELECT r.id, r.name, r.parent_id FROM recipes r
+  LEFT JOIN recipes p ON p.id = r.parent_id
+  WHERE r.parent_id IS NOT NULL AND p.id IS NULL
+SQL
+
+if bad_parents.empty?
+  puts "Recipe variant references: OK"
+else
+  puts "Invalid parent references: #{bad_parents.inspect}"
+  all_ok = false
+end
+
+# Check Active Storage attachments point to valid blobs
+bad_blobs = sqlite.execute(<<~SQL)
+  SELECT a.id, a.name, a.record_type, a.record_id FROM active_storage_attachments a
+  LEFT JOIN active_storage_blobs b ON b.id = a.blob_id
+  WHERE b.id IS NULL
+SQL
+
+if bad_blobs.empty?
+  puts "Active Storage blob references: OK"
+else
+  puts "Orphaned attachments: #{bad_blobs.inspect}"
+  all_ok = false
+end
+
+puts "\n#{all_ok ? 'Migration complete — all checks passed!' : 'Migration complete — ISSUES FOUND (see above)'}"
+
+pg.close
+sqlite.close

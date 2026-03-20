@@ -36,3 +36,6 @@ yarn-debug.log*
 
 # Environment variables
 .env
+
+# Kamal secrets
+/.kamal/secrets

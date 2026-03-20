@@ -1,0 +1,39 @@
+service: esophagus
+image: esophagus
+
+servers:
+  web:
+    - dell.hummingbird-ostrich.ts.net
+
+# Cloudflare terminates TLS. Set encryption mode in Cloudflare SSL/TLS to "Full".
+proxy:
+  host: es.ophag.us
+  app_port: 80
+
+# Local Docker registry (no auth required, but Kamal needs a value).
+registry:
+  server: dell.hummingbird-ostrich.ts.net:5555
+  username: anonymous
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+env:
+  secret:
+    - RAILS_MASTER_KEY
+
+aliases:
+  console: app exec --interactive --reuse "bin/rails console"
+  shell: app exec --interactive --reuse "bash"
+  logs: app logs -f
+  dbc: app exec --interactive --reuse "bin/rails dbconsole --include-password"
+
+volumes:
+  - "esophagus_storage:/rails/storage"
+
+asset_path: /rails/public/assets
+
+builder:
+  arch: amd64
+
+ssh:
+  user: jmckible
