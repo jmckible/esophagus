@@ -296,6 +296,133 @@
   box-shadow: var(--shadow-sm);
 }
 
+/* Recipe content typography */
+
+/* Section headings — uppercase muted labels with underline */
+.recipe-instructions .trix-content > div > strong {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  margin-top: var(--space-lg);
+  padding-bottom: var(--space-xs);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.recipe-instructions .trix-content > div:first-child > strong {
+  margin-top: 0;
+}
+
+/* Ingredient lists */
+.recipe-instructions .trix-content ul {
+  list-style: none;
+  padding-left: var(--space-lg);
+  margin: var(--space-sm) 0;
+}
+
+.recipe-instructions .trix-content ul li {
+  padding: 2px 0;
+  position: relative;
+}
+
+.recipe-instructions .trix-content ul li::before {
+  content: "\00b7";
+  position: absolute;
+  left: calc(-1 * var(--space-md));
+  color: var(--color-text-muted);
+  font-weight: 700;
+  font-size: 1.25em;
+  line-height: 1.2;
+}
+
+/* Sub-labels within ingredient lists (e.g. "Crust:", "Sauce:") */
+.recipe-instructions .trix-content ul li:has(> strong:only-child) {
+  margin-top: var(--space-sm);
+  padding-bottom: 0;
+}
+
+.recipe-instructions .trix-content ul li:has(> strong:only-child)::before {
+  content: none;
+}
+
+.recipe-instructions .trix-content ul li > strong:only-child {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* Direction steps */
+.recipe-instructions .trix-content ol {
+  padding-left: var(--space-xl);
+  margin: var(--space-sm) 0;
+  counter-reset: recipe-step;
+  list-style: none;
+}
+
+.recipe-instructions .trix-content ol li {
+  counter-increment: recipe-step;
+  padding: var(--space-sm) 0;
+  position: relative;
+  line-height: 1.6;
+}
+
+.recipe-instructions .trix-content ol li + li {
+  border-top: 1px solid var(--color-border);
+}
+
+.recipe-instructions .trix-content ol li::before {
+  content: counter(recipe-step);
+  position: absolute;
+  left: calc(-1 * var(--space-xl));
+  top: var(--space-sm);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-muted);
+  width: var(--space-lg);
+  text-align: right;
+}
+
+/* Plain text sections (Notes, Variations) */
+.recipe-instructions .trix-content > div {
+  line-height: 1.6;
+}
+
+/* Links within recipe content */
+.recipe-instructions .trix-content a {
+  color: var(--color-primary);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+/* Mobile adjustments */
+@media (width < 768px) {
+  .recipe-instructions {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    margin-left: calc(-1 * var(--space-md));
+    margin-right: calc(-1 * var(--space-md));
+    padding: var(--space-md);
+  }
+
+  .recipe-instructions .trix-content ul {
+    padding-left: var(--space-md);
+  }
+
+  .recipe-instructions .trix-content ol {
+    padding-left: var(--space-lg);
+  }
+
+  .recipe-instructions .trix-content ol li::before {
+    left: calc(-1 * var(--space-lg));
+    width: var(--space-md);
+  }
+}
+
 /* Cook log card - unified design */
 .cook-log-card .card-body {
   padding: 0;
