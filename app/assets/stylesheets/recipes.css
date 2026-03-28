@@ -357,33 +357,24 @@
 
 /* Direction steps */
 .recipe-instructions .trix-content ol {
-  padding-left: var(--space-xl);
+  padding-left: 1.5rem;
   margin: var(--space-sm) 0;
-  counter-reset: recipe-step;
-  list-style: none;
+  list-style: decimal;
 }
 
 .recipe-instructions .trix-content ol li {
-  counter-increment: recipe-step;
-  padding: var(--space-sm) 0;
-  position: relative;
-  line-height: 1.6;
+  padding: 0.375rem 0;
+  line-height: 1.5;
 }
 
 .recipe-instructions .trix-content ol li + li {
   border-top: 1px solid var(--color-border);
 }
 
-.recipe-instructions .trix-content ol li::before {
-  content: counter(recipe-step);
-  position: absolute;
-  left: calc(-1 * var(--space-xl));
-  top: var(--space-sm);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-semibold);
+.recipe-instructions .trix-content ol li::marker {
   color: var(--color-text-muted);
-  width: var(--space-lg);
-  text-align: right;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
 }
 
 /* Plain text sections (Notes, Variations) */
@@ -414,12 +405,7 @@
   }
 
   .recipe-instructions .trix-content ol {
-    padding-left: var(--space-lg);
-  }
-
-  .recipe-instructions .trix-content ol li::before {
-    left: calc(-1 * var(--space-lg));
-    width: var(--space-md);
+    padding-left: 1.25rem;
   }
 }
 
