@@ -1,5 +1,6 @@
 .page-header
   = btn_to 'Add Recipe', [:new, :recipe]
+  = btn_to 'Calendar', calendar_path, type: 'secondary'
   = btn_to 'Sections', :sections, type: 'secondary'
 
 - sections = Current.cookbook.sections.by_position.to_a

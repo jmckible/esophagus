@@ -14,6 +14,9 @@ Rails.application.routes.draw do
     resources :cooks, shallow: true
   end
 
+  get 'calendar(/:year/:month)', to: 'calendar#show', as: :calendar,
+    constraints: { year: /\d{4}/, month: /\d{1,2}/ }
+
   resources :sections do
     member do
       patch :move_up
