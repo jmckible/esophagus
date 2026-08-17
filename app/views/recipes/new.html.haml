@@ -38,6 +38,10 @@
           = f.label :link, 'External Link', class: 'form-label'
           = f.text_field :link, class: 'form-control', placeholder: 'https://example.com/recipe'
 
+        .form-group
+          = f.label :kid_status, 'Kid status', class: 'form-label'
+          = f.select :kid_status, Recipe.kid_statuses.keys.map { |status| [status.humanize, status] }, {include_blank: 'Not set'}, {class: 'form-control'}
+
     .card.mb-lg
       .card-header
         Instructions

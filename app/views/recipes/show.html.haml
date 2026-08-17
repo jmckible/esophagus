@@ -27,6 +27,8 @@
       - if @recipe.variants.any?
         %span.badge.badge-info
           = pluralize(@recipe.variants.count, 'variant')
+      - if @recipe.kid_status
+        %span.badge{ class: "kid-badge-#{@recipe.kid_status.dasherize}" }= @recipe.kid_status.humanize
 
     #recipe-stats
       = render 'recipes/stats', recipe: @recipe

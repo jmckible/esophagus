@@ -9,6 +9,13 @@ class Recipe < ApplicationRecord
   has_many :cooks, dependent: :destroy
   has_many :variants, class_name: 'Recipe', foreign_key: :parent_id, dependent: :nullify
 
+  # nil = not yet assessed
+  enum :kid_status, {
+    good_for_kids: 'good_for_kids',
+    kid_augmentable: 'kid_augmentable',
+    not_kid_friendly: 'not_kid_friendly'
+  }
+
   scope :abc, ->{ reorder(name: :asc) }
   scope :bases_only, ->{ where(parent_id: nil) }
 
@@ -26,8 +33,11 @@ class Recipe < ApplicationRecord
 
     days_since_last_cook = (Time.zone.today - last_cooked_on).to_i
 
-    # Must be at least 45 days AND 2.5x the expected interval
-    days_since_last_cook >= 45 && days_since_last_cook > expected_interval * 2.5
+    # A window, not a ratchet: flagged once 45+ days AND 2.5x overdue, but ages
+    # out past 6x — continued non-cooking means moved on, not forgotten.
+    # Cooking again resets the clock, so aged-out recipes can re-enter.
+    days_since_last_cook >= 45 &&
+      days_since_last_cook.between?(expected_interval * 2.5, expected_interval * 6)
   end
 
   def family_last_cooked_on

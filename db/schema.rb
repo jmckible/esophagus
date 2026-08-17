@@ -10,10 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_27_050723) do
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "pg_catalog.plpgsql"
-
+ActiveRecord::Schema[8.1].define(version: 20_260_815_000_000) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", precision: nil, null: false
@@ -21,7 +18,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_27_050723) do
     t.bigint "record_id", null: false
     t.string "record_type", null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
+    t.index %w[record_type record_id name], name: "index_action_text_rich_texts_uniqueness", unique: true
   end
 
   create_table "active_storage_attachments", force: :cascade do |t|
@@ -31,7 +28,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_27_050723) do
     t.bigint "record_id", null: false
     t.string "record_type", null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
-    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+    t.index %w[record_type record_id name blob_id], name: "index_active_storage_attachments_uniqueness", unique: true
   end
 
   create_table "active_storage_blobs", force: :cascade do |t|
@@ -49,7 +46,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_27_050723) do
   create_table "active_storage_variant_records", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
-    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+    t.index %w[blob_id variation_digest], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
   create_table "cookbooks", force: :cascade do |t|
@@ -72,6 +69,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_27_050723) do
     t.integer "cookbook_id"
     t.integer "cooks_count", default: 0
     t.datetime "created_at", precision: nil, null: false
+    t.string "kid_status"
     t.date "last_cooked_on"
     t.string "link"
     t.string "name"
@@ -80,7 +78,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_27_050723) do
     t.datetime "updated_at", precision: nil, null: false
     t.index ["cookbook_id"], name: "index_recipes_on_cookbook_id"
     t.index ["parent_id"], name: "index_recipes_on_parent_id"
-    t.index ["section_id", "name"], name: "index_recipes_on_section_id_and_name"
+    t.index %w[section_id name], name: "index_recipes_on_section_id_and_name"
   end
 
   create_table "sections", force: :cascade do |t|
@@ -89,7 +87,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_27_050723) do
     t.string "name"
     t.integer "position"
     t.datetime "updated_at", precision: nil, null: false
-    t.index ["cookbook_id", "position"], name: "index_sections_on_cookbook_id_and_position"
+    t.index %w[cookbook_id position], name: "index_sections_on_cookbook_id_and_position"
     t.index ["cookbook_id"], name: "index_sections_on_cookbook_id"
   end
 

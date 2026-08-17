@@ -201,6 +201,20 @@ textarea.form-control {
   text-decoration: underline;
 }
 
+/* Kid status badges */
+.kid-badge-good-for-kids {
+  background-color: var(--color-success);
+}
+
+.kid-badge-kid-augmentable {
+  background-color: var(--color-warning);
+  color: var(--color-text); /* white fails contrast on yellow */
+}
+
+.kid-badge-not-kid-friendly {
+  background-color: var(--color-danger);
+}
+
 /* Section badge with colors matching section links */
 .section-badge {
   color: white;
