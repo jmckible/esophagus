@@ -2,4 +2,10 @@
 
 # Add any container initialization steps here
 
+# Run pending migrations before booting the server. CMD is
+# ["./bin/thrust", "./bin/rails", "server"], so match the trailing args.
+if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
+  ./bin/rails db:prepare
+fi
+
 exec "${@}"
