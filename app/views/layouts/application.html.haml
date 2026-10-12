@@ -21,6 +21,27 @@
         navigator.serviceWorker.register("/service-worker.js")
       }
 
+      // Standalone PWAs get killed in the background and relaunch at start_url.
+      // sessionStorage is empty on a cold launch, so use it to tell a relaunch
+      // apart from navigating home, and restore the last page if it's recent.
+      (function() {
+        if (!window.matchMedia("(display-mode: standalone)").matches) return
+        try {
+          var key = "pwa:last-location", maxAge = 12 * 60 * 60 * 1000
+          if (!sessionStorage.getItem("pwa:launched")) {
+            sessionStorage.setItem("pwa:launched", "1")
+            var last = JSON.parse(localStorage.getItem(key) || "null")
+            if (location.pathname === "/" && last && Date.now() - last.at < maxAge && last.url !== "/") {
+              location.replace(last.url)
+              return
+            }
+          }
+          document.addEventListener("turbo:load", function() {
+            localStorage.setItem(key, JSON.stringify({ url: location.pathname + location.search, at: Date.now() }))
+          })
+        } catch (e) {}
+      })()
+
 
   %body
     .page-container
