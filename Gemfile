@@ -1,22 +1,22 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '3.4.7'
-# gem 'parser', '3.3.1.0'
+ruby '4.0.7'
 
-gem 'bcrypt', '3.1.20'
-gem 'bootsnap', '1.18.6', require: false
+gem 'bcrypt', '3.1.22'
+gem 'bootsnap', '1.26.0', require: false
 gem 'kamal'
-gem 'haml', '7.0.1'
-gem 'image_processing', '1.14.0'
-gem 'importmap-rails', '2.2.2'
+gem 'haml', '7.5.1'
+gem 'image_processing', '2.2.0'
+gem 'importmap-rails', '2.2.3'
 gem 'sqlite3'
-gem 'propshaft', '1.3.1'
-gem 'puma', '7.1.0'
-gem 'rails', '8.1.1'
+gem 'propshaft', '1.3.2'
+gem 'ruby-vips'
+gem 'puma', '8.0.2'
+gem 'rails', '8.1.4'
 gem 'stimulus-rails', '1.3.4'
 gem 'thruster'
-gem 'turbo-rails', '2.0.20'
+gem 'turbo-rails', '2.0.23'
 
 group :development do
   gem 'haml_lint', require: false

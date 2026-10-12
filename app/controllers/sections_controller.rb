@@ -25,7 +25,7 @@ class SectionsController < ApplicationController
     if @section.update(params.fetch(:section, {}).permit(:name))
       render turbo_stream: turbo_stream.replace(@section, partial: 'sections/display', method: :morph, locals: { section: @section })
     else
-      render turbo_stream: turbo_stream.replace(@section, partial: 'sections/edit_form', method: :morph, locals: { section: @section }), status: :unprocessable_entity
+      render turbo_stream: turbo_stream.replace(@section, partial: 'sections/edit_form', method: :morph, locals: { section: @section }), status: :unprocessable_content
     end
   end
 

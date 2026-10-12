@@ -3,7 +3,7 @@ plugins:
   - rubocop-rails
 
 AllCops:
-  TargetRubyVersion: 3.4
+  TargetRubyVersion: 4.0
   Include:
     - 'app/**/*.rb'
     - 'lib/**/*.rb'

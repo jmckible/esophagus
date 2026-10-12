@@ -13,8 +13,8 @@ Rails.application.configure do
   config.consider_all_requests_local = true
 
   # Allow connections from Tailscale
-  config.hosts << "dell:3000"
-  config.hosts << "dell.hummingbird-ostrich.ts.net:3000"
+  config.hosts << "dell:3021"
+  config.hosts << "dell.hummingbird-ostrich.ts.net:3021"
 
   # Enable server timing.
   config.server_timing = true
