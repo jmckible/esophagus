@@ -19,12 +19,6 @@ module ApplicationHelper
     link_to name, path, class: class_names(active:)
   end
 
-  # Short form for the forgotten pill: "9 mo", "2 yr"
-  def since_last_cook(recipe)
-    days = (Time.zone.today - recipe.last_cooked_on).to_i
-    days < 365 ? "#{(days / 30.44).round} mo" : "#{(days / 365.25).round} yr"
-  end
-
   # Structured recipes (a numbered directions list) get ingredients beside the
   # method; anything else reads as one column, or points at its source.
   def recipe_body_kind(recipe)

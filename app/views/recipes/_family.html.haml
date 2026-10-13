@@ -9,6 +9,4 @@
         = member.name
       %span.index-row-leader{ 'aria-hidden': true }
       - unless public
-        - if member.forgotten?
-          %span.pill-forgotten{ title: "Last cooked #{member.last_cooked_on.to_fs(:long)}" }= since_last_cook(member)
         %span.index-row-count.mono= member.cooks_count

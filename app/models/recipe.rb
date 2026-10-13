@@ -30,6 +30,8 @@ class Recipe < ApplicationRecord
   def forgotten?
     return false unless last_cooked_on
     return false unless favorite?
+    # Dropped because the kids won't eat it is a decision, not a lapse.
+    return false if not_kid_friendly?
 
     days_since_last_cook = (Time.zone.today - last_cooked_on).to_i
 

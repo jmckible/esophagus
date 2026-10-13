@@ -12,32 +12,6 @@
   color: var(--text-dimmed);
 }
 
-.index-sections {
-  flex: 1;
-  font-size: var(--fs-md);
-  line-height: 2;
-}
-
-.index-sections a {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  margin-right: 14px;
-  font-weight: var(--weight-medium);
-  white-space: nowrap;
-}
-
-.index-sections .section-mark {
-  width: 8px;
-  height: 8px;
-  border-radius: var(--radius-xs);
-}
-
-.index-sections .mono {
-  font-size: var(--fs-micro);
-  color: var(--text-dimmed);
-}
-
 .index-bar {
   position: sticky;
   top: 0;
@@ -72,6 +46,40 @@
   width: 10px;
   height: 10px;
   border-radius: 3px;
+}
+
+/* On desktop every section fits on screen, so the jump sheet is phone-only
+   and the find box sits beside the heading instead of in a sticky bar. */
+@media (width >= 768px) {
+  .recipe-index {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    column-gap: var(--space-md);
+  }
+
+  .recipe-index > :not(.index-head, .index-bar) {
+    grid-column: 1 / -1;
+  }
+
+  .index-head,
+  .index-bar {
+    margin-bottom: 18px;
+  }
+
+  .index-bar {
+    position: static;
+    margin-top: 0;
+    margin-inline: 0;
+    background: none;
+    border: 0;
+  }
+
+  .index-bar-inner {
+    padding: 0;
+  }
+
+  .index-current { display: none; }
 }
 
 .index-find {
@@ -283,10 +291,6 @@
 @media (width < 768px) {
   .index-head {
     padding-inline: 6px;
-  }
-
-  .index-sections {
-    display: none;
   }
 
   .index-bar {

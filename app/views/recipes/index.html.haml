@@ -5,12 +5,6 @@
     %h1
       Recipes
       %span.mono.index-total= @sections.sum(&:count)
-    %nav.index-sections{ 'aria-label': 'Sections' }
-      - @sections.each do |section|
-        = link_to "##{section.dom_id}", class: section.hue_class do
-          %span.section-mark
-          = section.name
-          %span.mono= section.count
 
   .index-bar{ data: { recipe_index_target: 'bar' } }
     .index-bar-inner

@@ -40,9 +40,9 @@
 }
 
 /* Market day: a faintly green daylight ground, white panels, near-black ink.
-   Tomato is the one accent (brand dot, new recipe, log cook). Favorite and
-   forgotten carry no colour: favorite is weight, forgotten an ink pill, so
-   neither competes with the section hues. */
+   Tomato is the one accent (brand dot, new recipe, log cook). Favorite
+   carries no colour, only weight, so it doesn't compete with the section
+   hues. */
 :root {
   color-scheme: light dark;
 

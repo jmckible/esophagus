@@ -183,18 +183,6 @@ a.chip-ink:hover {
   color: var(--bg-surface);
 }
 
-.pill-forgotten {
-  align-self: center;
-  padding: 1px 7px;
-  border-radius: var(--radius-pill);
-  background-color: var(--text);
-  color: var(--bg-surface);
-  font-family: var(--font-mono);
-  font-size: var(--fs-micro);
-  line-height: 1.5;
-  white-space: nowrap;
-}
-
 /* Forms */
 
 .form-group {

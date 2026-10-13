@@ -47,10 +47,9 @@
         Classics
       %span.chip.chip-ink Favorite
       %span.chip Variant of Pizza
-      %span.pill-forgotten 9 mo
 
 %section.styleguide-index
-  %p.label Index rows: favorite (bold), forgotten favorite (pill), plain, variants
+  %p.label Index rows: favorite (bold), plain, variants
   .index-columns
     - @samples.each_with_index do |recipe, i|
       %section.index-section{ class: Section.hue_class_for(i) }

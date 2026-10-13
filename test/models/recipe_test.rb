@@ -33,6 +33,12 @@ class RecipeTest < ActiveSupport::TestCase
     assert_not favorite_last_cooked(days_ago: 130, cooks: 5).forgotten?
   end
 
+  test 'not forgotten when not kid friendly' do
+    recipe = favorite_last_cooked(days_ago: 130)
+    recipe.kid_status = :not_kid_friendly
+    assert_not recipe.forgotten?
+  end
+
   test 'not forgotten when never cooked' do
     assert_not Recipe.new(name: 'Test', cooks_count: 13).forgotten?
   end

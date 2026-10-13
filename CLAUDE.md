@@ -28,7 +28,7 @@ Every page except `/login` and the public cookbook/recipe pages needs the encryp
 
 **Recipe statistics** (`app/models/recipe.rb`):
 - `favorite?`: 12+ cooks
-- `forgotten?`: a favorite not cooked in 45+ days that is between 2.5x and 6x its expected interval. Past 6x it ages out, on the theory that you've moved on rather than forgotten it.
+- `forgotten?`: a favorite not cooked in 45+ days that is between 2.5x and 6x its expected interval. Past 6x it ages out, on the theory that you've moved on rather than forgotten it. `not_kid_friendly` recipes are never forgotten, since dropping those was deliberate.
 - `family_last_cooked_on`: max across parent + variants
 - `kid_status`: string enum. `nil` means not yet assessed, which is different from `not_kid_friendly`.
 
@@ -48,7 +48,7 @@ Every page except `/login` and the public cookbook/recipe pages needs the encryp
 
 **Styles:** "Market day", chosen on the design canvas at https://claude.ai/artifact/Jxo261hiBXYhkLg97jjwBX (rows D, F3/F4 and H are the spec).
 - **Scales:** sizes, radii and tracking come from the scale tokens in `tokens.css`, shared with dashboard and stardate. A value off the scale is a scale change, not a one-off.
-- **Colour:** a green-tinted daylight ground, white `.panel`s with 16px radius, and ink UI, with dark mode following the device. Tomato (`--accent`) is the only accent. Section hues come from `Section.hue_class_for` (12 oklch hues, first section unmarked). Favorite is font weight and forgotten is an ink pill, so neither uses colour.
+- **Colour:** a green-tinted daylight ground, white `.panel`s with 16px radius, and ink UI, with dark mode following the device. Tomato (`--accent`) is the only accent. Section hues come from `Section.hue_class_for` (12 oklch hues, first section unmarked). Favorite is font weight, not colour.
 - **Type:** Schibsted Grotesk for everything and Fragment Mono for counts and dates, self-hosted from `app/assets/fonts`. A new font file needs a server restart (`touch tmp/restart.txt`) before Propshaft fingerprints its `url()`.
 - **Pages:** pages render inside `main.page` (`content_for :page_class, 'page--narrow'` for forms) and open with `page_header`. The recipe body picks a treatment from `recipe_body_kind`: structured Trix markup (an `ol`) gets ingredients beside directions via CSS only, while prose and link-only recipes read as one column or a source panel.
 - **Styleguide:** `/styleguide` shows every shared pattern, so add new ones there.
