@@ -44,6 +44,12 @@ class RecipesController < ApplicationController
     end
   end
 
+  def destroy
+    recipe = Current.cookbook.recipes.find params[:id]
+    recipe.destroy!
+    redirect_to root_url, notice: "Deleted #{recipe.display_name}", status: :see_other
+  end
+
   protected
 
   def recipe_params
