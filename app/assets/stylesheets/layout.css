@@ -16,20 +16,9 @@
 }
 
 .wordmark {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-sm);
   font-size: var(--fs-3xl);
   font-weight: var(--weight-black);
   letter-spacing: -0.04em;
-}
-
-.wordmark::before {
-  content: '';
-  width: 12px;
-  height: 12px;
-  border-radius: var(--radius-pill);
-  background: var(--accent);
 }
 
 .wordmark:hover {
@@ -78,11 +67,6 @@
     margin-right: var(--space-xs);
   }
 
-  .wordmark::before {
-    width: 10px;
-    height: 10px;
-  }
-
   .nav-links a {
     padding: 0 10px;
     font-size: var(--fs-md);
@@ -102,10 +86,29 @@
   }
 }
 
+/* Too narrow for the name: the app icon's tomato "e" stands in for it. */
 @media (width < 420px) {
   .wordmark {
-    font-size: 0;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
     margin-right: 0;
+    border-radius: var(--radius-lg);
+    background: var(--accent);
+    color: var(--on-accent);
+    font-size: 0;
+  }
+
+  .wordmark::before {
+    content: 'e';
+    font-size: var(--fs-2xl);
+    line-height: 1;
+    margin-top: -2px;
+  }
+
+  .wordmark:hover {
+    color: var(--on-accent);
   }
 }
 
