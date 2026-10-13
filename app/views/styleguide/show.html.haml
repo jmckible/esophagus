@@ -1,0 +1,91 @@
+= content_for :title, 'Styleguide'
+
+= page_header 'Styleguide', eyebrow: 'esophagus', summary: 'Every shared pattern, on one page. Add new ones here.' do
+  = link_to 'Secondary', '#', class: 'btn btn-secondary'
+  = link_to 'Ink', '#', class: 'btn btn-ink'
+  = link_to 'Primary', '#', class: 'btn btn-primary'
+
+%section.panel
+  .panel-header
+    %h2.panel-title Type
+  .panel-body
+    - %w[micro xs sm md base lg xl 2xl 3xl 4xl 5xl].each do |step|
+      .styleguide-row
+        %code.mono= "--fs-#{step}"
+        %span{ style: "font-size: var(--fs-#{step}); font-weight: #{step.to_i >= 2 ? 900 : 450}" } Pulled pork, Lexington sauce
+    .styleguide-row
+      %code.mono --font-mono
+      %span.mono 16 · Aug 4, 2026 · 9 mo
+
+%section.panel
+  .panel-header
+    %h2.panel-title Colour
+  .panel-body
+    .styleguide-swatches
+      - %w[bg bg-surface bg-soft border leader text text-body text-muted text-dimmed accent danger].each do |token|
+        .styleguide-swatch
+          .styleguide-chip{ style: "background: var(--#{token})" }
+          %code.mono= "--#{token}"
+    %p.label Section hues
+    .styleguide-swatches
+      - (0..Section::HUE_COUNT).each do |i|
+        .styleguide-swatch{ class: Section.hue_class_for(i) }
+          .styleguide-chip.styleguide-chip--hue
+            %span.section-mark
+          %code.mono= Section.hue_class_for(i) || 'first: unmarked'
+
+%section.panel
+  .panel-header
+    %h2.panel-title Chips and marks
+  .panel-body
+    .chips
+      %span.chip.chip-section.section-hue-1
+        %span.section-mark
+        Vegetatrian
+      %span.chip.chip-section
+        %span.section-mark
+        Classics
+      %span.chip.chip-ink Favorite
+      %span.chip Variant of Pizza
+      %span.pill-forgotten 9 mo
+
+%section.styleguide-index
+  %p.label Index rows: favorite (bold), forgotten favorite (pill), plain, variants
+  .index-columns
+    - @samples.each_with_index do |recipe, i|
+      %section.index-section{ class: Section.hue_class_for(i) }
+        %h2.index-section-title
+          %span.section-mark
+          %span.index-section-name= recipe.section&.name || 'Uncategorized'
+          %span.mono= 1 + recipe.variants.size
+        .index-section-rows
+          = render 'recipes/family', recipe:
+
+%section.panel
+  .panel-header
+    %h2.panel-title Page header
+  .panel-body
+    = page_header 'Edit recipe', back: ['Pulled Pork', '#'], summary: '16 cooks' do
+      = link_to 'Delete', '#', class: 'btn btn-danger'
+
+%section.panel
+  .panel-header
+    %h2.panel-title Form
+  .panel-body
+    .form-row
+      .form-group
+        %label.form-label{ for: 'sg-name' } Name
+        %input.form-control#sg-name{ value: 'Pulled Pork' }
+      .form-group
+        %label.form-label{ for: 'sg-section' } Section
+        %select.form-control#sg-section
+          %option Meat
+        .form-help Can't change: this recipe has variants
+    .form-actions
+      = link_to 'Save changes', '#', class: 'btn btn-primary'
+      = link_to 'Cancel', '#', class: 'btn btn-secondary'
+      = link_to 'Small', '#', class: 'btn btn-secondary btn-sm'
+
+%section
+  .alert Recipe updated
+  .alert.alert-danger Invalid credentials

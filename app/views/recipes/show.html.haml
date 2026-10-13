@@ -1,62 +1,43 @@
 = content_for :title, @recipe.display_name
 
-.breadcrumb
-  = link_to 'Recipes', root_url
-  %span.separator /
-  - if @recipe.section
-    - sections = Current.cookbook.sections.by_position.to_a
-    - section_index = sections.index(@recipe.section)
-    - section_anchor = section_index == 0 ? root_url : root_url + "#section-#{@recipe.section.id}"
-    = link_to @recipe.section.name, section_anchor
-    %span.separator /
-  %span.active= @recipe.display_name
+.recipe{ class: @recipe.section&.hue_class }
+  %section.panel.recipe-head
+    .recipe-head-top
+      .recipe-head-title
+        .chips
+          - if @recipe.section
+            = link_to root_path(anchor: "section-#{@recipe.section.id}"), class: 'chip chip-section' do
+              %span.section-mark
+              = @recipe.section.name
+          - if @recipe.favorite?
+            %span.chip.chip-ink Favorite
+          - if @recipe.parent
+            = link_to "Variant of #{@recipe.parent.name}", @recipe.parent, class: 'chip'
+        %h1.recipe-title= @recipe.display_name
+      #cook-form.recipe-head-log
+        = render 'recipes/cook_form', recipe: @recipe
+    .recipe-head-foot
+      %dl#recipe-stats.recipe-stats
+        = render 'recipes/stats', recipe: @recipe
+      = link_to 'Edit', [:edit, @recipe], class: 'text-link'
 
-.recipe-header
-  %div
-    %h1.recipe-title{ class: [('favorite' if @recipe.favorite? && !@recipe.forgotten?), ('forgotten' if @recipe.forgotten?)].compact }
-      = @recipe.display_name
+  - case recipe_body_kind(@recipe)
+  - when :structured, :prose
+    %article.panel.recipe-body{ class: "recipe-body--#{recipe_body_kind(@recipe)}" }
+      = @recipe.instructions
+  - when :link
+    %section.panel.recipe-source
+      %p.label Recipe at
+      %p.recipe-source-host= link_host(@recipe.link)
+      %p.recipe-source-url.mono= @recipe.link
+      .recipe-source-actions
+        = link_to 'Open recipe ↗', @recipe.link, class: 'btn btn-ink', target: '_blank', rel: 'noopener'
+        = link_to 'Add instructions', [:edit, @recipe], class: 'text-link'
+  - else
+    %section.panel.recipe-source
+      %p.recipe-source-host No instructions yet
+      .recipe-source-actions
+        = link_to 'Add instructions', [:edit, @recipe], class: 'btn btn-secondary'
 
-    .recipe-badges
-      - if @recipe.section
-        - color_class = section_color_class(@recipe.section)
-        %span.badge{ class: color_class ? ['section-badge', color_class] : 'badge-secondary' }= @recipe.section.name
-      - if @recipe.parent
-        %span.badge.badge-info
-          Variant of
-          = link_to @recipe.parent.name, @recipe.parent
-      - if @recipe.variants.any?
-        %span.badge.badge-info
-          = pluralize(@recipe.variants.count, 'variant')
-      - if @recipe.kid_status
-        %span.badge{ class: "kid-badge-#{@recipe.kid_status.dasherize}" }= @recipe.kid_status.humanize
-
-    #recipe-stats
-      = render 'recipes/stats', recipe: @recipe
-
-  .recipe-actions
-    - if @recipe.link
-      = link_to 'Open Link', @recipe.link, class: 'btn btn-primary', target: '_blank', rel: 'noopener'
-    = link_to 'Edit', [:edit, @recipe], class: 'recipe-edit-link'
-
-- if @recipe.variants.any?
-  .card.mb-lg
-    .card-header
-      Variants
-    .card-body
-      - @recipe.variants.abc.each do |variant|
-        %div
-          = link_to variant.display_name, variant
-
-.recipe-instructions
-  = @recipe.instructions
-
-.card.cook-log-card{ data: { controller: 'preserve-scroll' } }
-  .card-header
-    Cooking Log
-  .card-body
-    #cook-form.cook-log-form-section
-      = render 'recipes/cook_form', recipe: @recipe
-
-    #cook-history
-      = render 'recipes/cook_history', recipe: @recipe
-
+  %section.panel#cook-history
+    = render 'recipes/cook_history', recipe: @recipe

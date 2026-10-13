@@ -1,0 +1,44 @@
+# Recipe structure
+
+Turn recipes into a shape the app can lay out, and eventually into a format built for cooking: mise first, then sequenced steps.
+
+## Why
+
+The redesign's recipe page (canvas row D: https://claude.ai/artifact/Jxo261hiBXYhkLg97jjwBX) has two treatments:
+
+- **Structured:** ingredients beside numbered directions, with notes and sub-recipes such as sauces below. It's rendered with CSS from the existing Trix markup, so no new fields are needed.
+- **Unstructured:** one reading column. When the recipe is only a pointer, the source link is the emphasis.
+
+The page is only as good as the share of recipes that are structured. As of 2026-10-12 (dev copy of prod, 220 recipes):
+
+| Shape | Count |
+|---|---|
+| Headings + `ul` ingredients + `ol` directions | 62 |
+| `ul` + `ol`, no headings | 3 |
+| One list only | 27 |
+| Prose only | 96 |
+| Empty, with link | 15 |
+| Empty, no link | 17 |
+
+The 62 come from formatting pass 1 (March 2026), which hasn't been pushed to production. The current target format is `docs/plans/recipe-style-guide.md`, copied from the gitignored `tmp/` where pass 1 left it.
+
+## Structured vs unstructured is a rendering decision, not a field
+
+Detect structure from the markup (an `ol` directions list exists) rather than storing a flag. A recipe becomes structured by being rewritten, and the page follows. Revisit this if the mise format below needs something markup can't carry.
+
+## Work, roughly in dependency order
+
+1. **Decide the target format first.** Jordan has an "optimized" way of writing recipes for prepping mise and sequencing steps. Design it before converting anything, or every recipe gets reformatted twice. Open questions:
+   - Is mise a grouping of ingredients by prep bowl or stage?
+   - Are steps tied to the mise groups they consume?
+   - Does sequencing mean parallel tracks, such as the sauce built while the pork rests?
+   - How much of this Trix markup can carry, and when does it need structure in the database?
+2. **Import link-only recipes.** Fetch the 15 empty-with-link recipes from their source and rewrite them into the target format.
+3. **Convert prose and one-list recipes.** Some prose recipes are legitimately notes (Salmon is a list of approaches), so leave those unstructured.
+4. **Model book references as a source.** About 90 stubs are pointers to physical cookbooks ("Food Lab", "Milk Street Tuesday"). A source field (book + page) fits them better than instruction text.
+5. **Photos.** A photo per structured recipe would carry larger index cards and the recipe header. Active Storage and `ruby-vips` are already in place.
+
+## Data quirks found along the way
+
+- 21 variants are filed in a different section than their parent. The index shows variants under their parent, so a variant's own `section_id` is effectively dead. Either make variants inherit their parent's section, or drop the column for variants.
+- The forgotten flag conflates *forgotten* with *retired*: Pasta Frittata hasn't been cooked since 2020. See `meal-planning.md`.

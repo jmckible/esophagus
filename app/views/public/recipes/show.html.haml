@@ -1,12 +1,10 @@
-%h1.recipe-title{ class: [('favorite' if @recipe.favorite? && !@recipe.forgotten?), ('forgotten' if @recipe.forgotten?)].compact }
-  = @recipe.display_name
+= content_for :title, @recipe.display_name
 
-.recipe-meta.mb-lg
-  = link_to 'Back', [:public, @recipe.cookbook], class: 'btn btn-secondary'
-  - if @recipe.section
-    %span.badge.badge-secondary= @recipe.section.name
+= page_header @recipe.display_name, back: [@recipe.cookbook.name, [:public, @recipe.cookbook]], eyebrow: @recipe.section&.name do
   - if @recipe.link
-    = link_to 'Open Link', @recipe.link, class: 'btn btn-secondary', target: '_blank', rel: 'noopener'
+    = link_to 'Open recipe ↗', @recipe.link, class: 'btn btn-secondary', target: '_blank', rel: 'noopener'
 
-.recipe-instructions
-  = @recipe.instructions
+- kind = recipe_body_kind(@recipe)
+- if kind.in?(%i[structured prose])
+  %article.panel.recipe-body{ class: ["recipe-body--#{kind}", @recipe.section&.hue_class] }
+    = @recipe.instructions

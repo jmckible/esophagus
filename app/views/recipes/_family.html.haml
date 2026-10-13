@@ -1,0 +1,14 @@
+-# locals: (recipe:, public: false)
+.index-family
+  - [recipe, *recipe.variants.sort_by(&:name)].each do |member|
+    - variant = member.parent_id.present?
+    = link_to (public ? [:public, member] : member), class: ['index-row', ('variant' if variant), ('favorite' if member.favorite?)], data: { search: [(recipe.name if variant), member.name].compact.join(' ').downcase } do
+      %span.index-row-name
+        - if variant
+          %span.index-row-parent #{recipe.name} ·
+        = member.name
+      %span.index-row-leader{ 'aria-hidden': true }
+      - unless public
+        - if member.forgotten?
+          %span.pill-forgotten{ title: "Last cooked #{member.last_cooked_on.to_fs(:long)}" }= since_last_cook(member)
+        %span.index-row-count.mono= member.cooks_count

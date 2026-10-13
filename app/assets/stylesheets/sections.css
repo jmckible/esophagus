@@ -1,0 +1,76 @@
+.sections-panel {
+  overflow: hidden;
+}
+
+.sections-panel .table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.sections-panel .order-column {
+  width: 120px;
+}
+
+.section-controls {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.section-display,
+.section-edit-form {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.section-name {
+  font-weight: var(--weight-medium);
+}
+
+.section-recipe-count {
+  font-size: var(--fs-md);
+  color: var(--text-muted);
+}
+
+.section-actions,
+.section-edit-form .form-actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.section-edit-form .form-control {
+  flex: 1;
+}
+
+/* Phone: the table becomes a stack of cards */
+@media (width < 768px) {
+  .sections-panel {
+    background: none;
+    border: none;
+    box-shadow: none;
+  }
+
+  .sections-panel .table thead {
+    display: none;
+  }
+
+  .sections-panel .table,
+  .sections-panel .table tbody,
+  .sections-panel .table tr,
+  .sections-panel .table td {
+    display: block;
+  }
+
+  .sections-panel .table tr {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-md);
+    padding: var(--space-md);
+  }
+
+  .sections-panel .table td {
+    padding: var(--space-sm) 0;
+    border: none;
+  }
+}

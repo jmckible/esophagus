@@ -1,5 +1,3 @@
-%h1 Section
-
+- content_for :page_class, 'page--narrow'
+= page_header 'Section', back: ['Sections', sections_path]
 = render 'display', section: @section
-
-%p= link_to 'Back to Sections', sections_path

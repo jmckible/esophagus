@@ -1,5 +1,3 @@
-%h1 Edit Section
-
+- content_for :page_class, 'page--narrow'
+= page_header 'Edit section', back: ['Sections', sections_path]
 = render 'edit_form', section: @section
-
-%p= link_to 'Back to Sections', sections_path

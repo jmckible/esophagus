@@ -46,6 +46,13 @@ Every page except `/login` and the public cookbook/recipe pages needs the encryp
 
 **Rich text:** Recipe instructions are Action Text. Image variants need `ruby-vips` in the Gemfile, because image_processing 2.x no longer pulls it in.
 
+**Styles:** "Market day", chosen on the design canvas at https://claude.ai/artifact/Jxo261hiBXYhkLg97jjwBX (rows D, F3/F4 and H are the spec).
+- **Scales:** sizes, radii and tracking come from the scale tokens in `tokens.css`, shared with dashboard and stardate. A value off the scale is a scale change, not a one-off.
+- **Colour:** a green-tinted daylight ground, white `.panel`s with 16px radius, and ink UI, with dark mode following the device. Tomato (`--accent`) is the only accent. Section hues come from `Section.hue_class_for` (12 oklch hues, first section unmarked). Favorite is font weight and forgotten is an ink pill, so neither uses colour.
+- **Type:** Schibsted Grotesk for everything and Fragment Mono for counts and dates, self-hosted from `app/assets/fonts`. A new font file needs a server restart (`touch tmp/restart.txt`) before Propshaft fingerprints its `url()`.
+- **Pages:** pages render inside `main.page` (`content_for :page_class, 'page--narrow'` for forms) and open with `page_header`. The recipe body picks a treatment from `recipe_body_kind`: structured Trix markup (an `ol`) gets ingredients beside directions via CSS only, while prose and link-only recipes read as one column or a source panel.
+- **Styleguide:** `/styleguide` shows every shared pattern, so add new ones there.
+
 **JavaScript:** Pin packages with `bin/importmap pin <pkg>`, which downloads into `vendor/javascript`. No CDN pins.
 
 ## Turbo 8 Patterns

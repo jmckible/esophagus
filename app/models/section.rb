@@ -8,29 +8,22 @@ class Section < ApplicationRecord
   validates :name, presence: true
   validates :position, presence: true, numericality: { only_integer: true }
 
-  # Number of distinct section colors in CSS
-  COLOR_COUNT = 13
+  # Must match the .section-hue-N classes in tokens.css
+  HUE_COUNT = 12
 
-  # Returns the CSS color class for badges, or nil if first section
-  def color_class
-    index = color_index_for_section
-    index ? "section-color-#{index}" : nil
+  def self.hue_class_for(position_index)
+    "section-hue-#{((position_index - 1) % HUE_COUNT) + 1}" if position_index.positive?
   end
 
-  # Returns the CSS color class for section links
-  def link_color_class
-    index = color_index_for_section
-    index ? "section-link-#{index}" : nil
+  # Uncategorized takes the hue after the last section
+  def self.uncategorized_hue_class(cookbook)
+    hue_class_for(cookbook.sections.count)
   end
 
-  private
-
-  def color_index_for_section
-    sections = cookbook.sections.by_position.to_a
-    section_index = sections.index(self)
-
-    return nil if section_index == 0  # First section has no color
-
-    (section_index - 1) % COLOR_COUNT
+  # nil for the first section, which is the index's default and goes unmarked
+  def hue_class
+    index = cookbook.sections.by_position.ids.index(id)
+    self.class.hue_class_for(index) if index
   end
+
 end

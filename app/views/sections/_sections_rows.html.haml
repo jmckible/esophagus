@@ -1,13 +1,12 @@
-- sections.each_with_index do |section, index|
+- sections.each do |section|
   %tr
     %td.order-column
       .section-controls
         - if section == sections.first
-          .btn.btn-sm{style: 'visibility: hidden'} ↑
+          .btn.btn-sm{ style: 'visibility: hidden' } ↑
         - else
           = button_to '↑', move_up_section_path(section), method: :patch, class: 'btn btn-secondary btn-sm', title: 'Move up'
         - unless section == sections.last
           = button_to '↓', move_down_section_path(section), method: :patch, class: 'btn btn-secondary btn-sm', title: 'Move down'
-    %td.name-column
+    %td
       = render 'display', section: section
-    %td.actions-column

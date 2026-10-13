@@ -24,5 +24,7 @@ Rails.application.routes.draw do
     end
   end
 
+  get 'styleguide', to: 'styleguide#show'
+
   root to: 'recipes#index'
 end

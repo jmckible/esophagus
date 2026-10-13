@@ -1,17 +1,18 @@
 !!! 5
-%html{ lang: 'en '}
+%html{ lang: 'en' }
   %head
     %title= yield :title
     = csrf_meta_tags
     = csp_meta_tag
     = action_cable_meta_tag
     = turbo_refreshes_with method: :morph, scroll: :preserve
-    = stylesheet_link_tag 'application', 'data-turbolinks-track': 'reload'
+    = stylesheet_link_tag 'application', 'data-turbo-track': 'reload'
     = javascript_importmap_tags
     %link{ rel: 'icon', href: '/icon.svg', type: 'image/svg+xml' }
     %meta{ charset: 'utf8' }
     %meta{ name: 'viewport', content: 'width=device-width, initial-scale=1, shrink-to-fit=no' }
-    %meta{ name: 'theme-color', content: '#000000' }
+    %meta{ name: 'theme-color', content: '#ffffff', media: '(prefers-color-scheme: light)' }
+    %meta{ name: 'theme-color', content: '#1c221e', media: '(prefers-color-scheme: dark)' }
     %meta{ name: 'apple-mobile-web-app-capable', content: 'yes' }
     %meta{ name: 'apple-mobile-web-app-status-bar-style', content: 'default' }
     %link{ rel: 'manifest', href: '/manifest.json' }
@@ -44,11 +45,20 @@
 
 
   %body
-    .page-container
+    - if Current.user
+      %nav.nav
+        .nav-inner
+          = link_to 'esophagus', root_path, class: 'wordmark'
+          .nav-links
+            = nav_link 'Recipes', root_path, controller_name == 'recipes' && action_name != 'new'
+            = nav_link 'Calendar', calendar_path, controller_name == 'calendar'
+            = nav_link 'Sections', sections_path, controller_name == 'sections'
+          = link_to new_recipe_path, class: 'btn btn-primary nav-new', 'aria-label': 'New recipe' do
+            %span.nav-new-full + New recipe
+            %span.nav-new-short{ 'aria-hidden': true } +
+    %main{ class: ['page', content_for(:page_class)] }
       - if flash[:notice]
-        .alert.alert-success{ data: { turbo_temporary: true } }
-          = flash[:notice]
+        .alert.alert-success{ data: { turbo_temporary: true } }= flash[:notice]
       - if flash[:alert]
-        .alert.alert-danger{ data: { turbo_temporary: true } }
-          = flash[:alert]
+        .alert.alert-danger{ data: { turbo_temporary: true } }= flash[:alert]
       = yield

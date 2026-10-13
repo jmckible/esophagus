@@ -1,13 +1,13 @@
-.login-form
-  %h1 Login
+- content_for :page_class, 'page--narrow'
+= content_for :title, 'Log in'
 
-  = form_with url: authenticate_path do |f|
-    .form-group
-      = f.label :email, class: 'form-label'
-      = f.text_field :email, placeholder: 'Email', class: 'form-control'
+= page_header 'Log in'
 
-    .form-group
-      = f.label :password, class: 'form-label'
-      = f.password_field :password, placeholder: 'Password', class: 'form-control'
-
-    = f.submit 'Login', class: 'btn btn-primary'
+= form_with url: authenticate_path do |f|
+  .form-group
+    = f.label :email, class: 'form-label'
+    = f.email_field :email, class: 'form-control', autocomplete: 'username'
+  .form-group
+    = f.label :password, class: 'form-label'
+    = f.password_field :password, class: 'form-control', autocomplete: 'current-password'
+  = f.submit 'Log in', class: 'btn btn-primary'

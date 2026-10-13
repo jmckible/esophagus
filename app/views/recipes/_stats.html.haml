@@ -1,4 +1,29 @@
-.recipe-stats
-  Prepared #{pluralize(recipe.cooks.count, 'time')}
-  - if recipe.family_last_cooked_on
-    • Last: #{recipe.family_last_cooked_on.strftime('%B %e, %Y')}
+- last = recipe.family_last_cooked_on
+.recipe-stat
+  %dt.label Cooked
+  %dd= pluralize(recipe.cooks.count, 'time')
+.recipe-stat
+  %dt.label Last cooked
+  %dd
+    - if last
+      = last.strftime('%b %-d, %Y')
+      %small= "#{(Time.zone.today - last).to_i} days ago"
+    - else
+      %span.recipe-stat-none Never
+.recipe-stat
+  %dt.label Kids
+  %dd
+    - if recipe.kid_status
+      = recipe.kid_status.humanize
+    - else
+      %span.recipe-stat-none Not assessed
+- if recipe.link.present?
+  .recipe-stat
+    %dt.label Source
+    %dd= link_to "#{link_host(recipe.link)} ↗", recipe.link, class: 'recipe-stat-link', target: '_blank', rel: 'noopener'
+- if recipe.variants.any?
+  .recipe-stat
+    %dt.label Variants
+    %dd.recipe-stat-variants
+      - recipe.variants.sort_by(&:name).each do |variant|
+        = link_to variant.name, variant

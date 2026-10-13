@@ -1,9 +1,18 @@
-- if recipe.cooks.any?
-  .cook-history-section
-    .cook-history-header History
-    .cook-history
-      - recipe.cooks.order(date: :desc).first(20).each do |c|
-        .cook-entry
-          .cook-date
-            = c.date.strftime('%B %e, %Y')
-            = button_to '×', c, method: :delete, class: 'cook-delete', data: { turbo_confirm: 'Remove this cook?' }
+- total = recipe.cooks.count
+- shown = recipe.cooks.order(date: :desc).limit(24).to_a
+.panel-header
+  %h2.panel-title Cook log
+  - if total > shown.size
+    %span.mono.label= "#{shown.size} of #{total}"
+.panel-body
+  - if shown.any?
+    - shown.group_by { it.date.year }.each do |year, cooks|
+      .cook-year
+        %span.cook-year-label= year
+        %ul.cook-dates
+          - cooks.each do |cook|
+            %li.cook-date
+              %span.mono= cook.date.strftime('%b %-d')
+              = button_to '×', cook, method: :delete, class: 'cook-delete', form_class: 'cook-delete-form', 'aria-label': "Remove the #{cook.date.to_fs(:long)} cook", data: { turbo_confirm: 'Remove this cook?' }
+  - else
+    %p.recipe-stat-none Not cooked yet.

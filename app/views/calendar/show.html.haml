@@ -1,30 +1,24 @@
 = content_for :title, @date.strftime('%B %Y')
 
-- prev_month = @date.prev_month
-- next_month = @date.next_month
-- today = Time.zone.today
+:ruby
+  prev_month = @date.prev_month
+  next_month = @date.next_month
+  today = Time.zone.today
 
-.page-header
-  = btn_to 'Recipes', root_path, type: 'secondary'
-  %h1.calendar-title= @date.strftime('%B %Y')
-  = btn_to 'Today', calendar_path, type: 'secondary'
-
-.calendar-toolbar
+= page_header @date.strftime('%B %Y') do
   .calendar-nav
     = link_to '←', calendar_path(prev_month.year, prev_month.month), class: 'calendar-nav-link', 'aria-label': 'Previous month'
     = link_to '→', calendar_path(next_month.year, next_month.month), class: 'calendar-nav-link', 'aria-label': 'Next month'
-
-  = form_with url: calendar_path, method: :get, class: 'calendar-jump' do |f|
-    = f.month_field :jump, value: @date.strftime('%Y-%m'), class: 'form-control', onchange: 'this.form.requestSubmit()'
+    = link_to 'Today', calendar_path, class: 'btn btn-secondary'
+    = form_with url: calendar_path, method: :get, class: 'calendar-jump' do |f|
+      = f.month_field :jump, value: @date.strftime('%Y-%m'), class: 'form-control', onchange: 'this.form.requestSubmit()', 'aria-label': 'Jump to month'
 
 .calendar-grid
   - %w[Sun Mon Tue Wed Thu Fri Sat].each do |day|
     .calendar-weekday= day
 
   - (@range_start..@range_end).each do |date|
-    - cooks = @cooks_by_date[date] || []
-    - other_month = date.month != @date.month
-    .calendar-day{ class: [('other-month' if other_month), ('today' if date == today)].compact }
+    .calendar-day{ class: [('other-month' if date.month != @date.month), ('today' if date == today)] }
       .calendar-day-number= date.day
-      - cooks.each do |cook|
+      - (@cooks_by_date[date] || []).each do |cook|
         = link_to cook.recipe.display_name, cook.recipe, class: 'calendar-cook'
