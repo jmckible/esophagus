@@ -89,6 +89,29 @@
       = link_to 'Cancel', '#', class: 'btn btn-secondary'
       = link_to 'Small', '#', class: 'btn btn-secondary btn-sm'
 
+-# Structured recipe body: ingredients grouped as mise (a label item nesting
+-# what goes in together), beside numbered directions
+%article.panel.recipe-body.recipe-body--structured
+  .lexxy-content
+    %h2 Ingredients
+    %ul
+      %li
+        %strong Aromatics
+        %ul
+          %li ½ large onion, finely diced
+          %li ½ large green pepper, finely diced
+      %li
+        %strong Spices
+        %ul
+          %li 2 cloves garlic, minced
+          %li ½ T dried oregano
+    %h2 Directions
+    %ol
+      %li Heat oil in a sauté pan over medium-high. Add aromatics, reduce to medium, cook until softened, about 7 minutes.
+      %li
+        %strong Then:
+        add spices; cook until fragrant, about 1 minute.
+
 %section
   .alert Recipe updated
   .alert.alert-danger Invalid credentials

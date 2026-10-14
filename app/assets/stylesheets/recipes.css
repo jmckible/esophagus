@@ -506,7 +506,8 @@
   }
 }
 
-/* Recipe body. Instructions are Trix HTML: a bold-only div is a heading, ul is
+/* Recipe body. Instructions are Action Text HTML: a heading (h2/h3 from Lexxy,
+   or a bold-only div/p left over from Trix) is a section label, ul is
    ingredients, ol is directions. Structured bodies put the ingredients that come
    before the directions in a column beside them; everything else spans. */
 
@@ -525,6 +526,7 @@
   max-width: none;
 }
 
+.recipe-body .lexxy-content > :is(h2, h3),
 .recipe-body .lexxy-content > :is(div, p) > strong:only-child {
   display: block;
   margin-top: 34px;
@@ -537,11 +539,12 @@
   color: var(--text);
 }
 
+.recipe-body .lexxy-content > :is(h2, h3):first-child,
 .recipe-body .lexxy-content > :is(div, p):first-child > strong:only-child {
   margin-top: 0;
 }
 
-.recipe-body .lexxy-content > :is(div, p):has(> strong:only-child) + :is(div, p) {
+.recipe-body .lexxy-content > :is(h2, h3, :is(div, p):has(> strong:only-child)) + :is(div, p) {
   margin-top: 6px;
 }
 
@@ -560,8 +563,9 @@
   color: var(--text);
 }
 
-/* Sub-labels within ingredient lists ("Crust:", "Sauce:") */
-.recipe-body .lexxy-content ul li:has(> strong:only-child) {
+/* Sub-labels within ingredient lists: a bold-only item ("Crust:", "Sauce:"),
+   or a mise group, whose label item nests the ingredients that go in together */
+.recipe-body .lexxy-content ul li:is(:has(> strong:only-child), :has(> ul)) {
   padding-top: 18px;
   font-size: var(--fs-xs);
   font-weight: var(--weight-bold);
@@ -570,20 +574,41 @@
   color: var(--text-dimmed);
 }
 
+.recipe-body .lexxy-content ul li:has(> ul) {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.recipe-body .lexxy-content ul li:has(> ul) > ul {
+  font-size: var(--fs-lg);
+  font-weight: var(--weight-normal);
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--text);
+}
+
+.recipe-body .lexxy-content ul li:has(> ul) > strong {
+  font-weight: inherit;
+}
+
 .recipe-body .lexxy-content ol {
   counter-reset: step;
 }
 
+/* The number is positioned rather than a grid column, so a step that opens
+   with inline markup ("<strong>Grill:</strong> Set up...") stays one line */
 .recipe-body .lexxy-content ol li {
   counter-increment: step;
-  display: grid;
-  grid-template-columns: 64px minmax(0, 1fr);
-  padding: var(--space-md) 0;
+  position: relative;
+  padding: var(--space-md) 0 var(--space-md) 64px;
   border-bottom: 1px solid var(--bg-soft);
 }
 
 .recipe-body .lexxy-content ol li::before {
   content: counter(step);
+  position: absolute;
+  top: var(--space-md);
+  left: 0;
   font-size: var(--fs-4xl);
   font-weight: var(--weight-black);
   letter-spacing: -0.04em;
@@ -609,17 +634,19 @@
 }
 
 .recipe-body--structured .lexxy-content > ul:has(~ ol),
-.recipe-body--structured .lexxy-content > :is(div, p):has(+ ul):has(~ ol) {
+.recipe-body--structured .lexxy-content > :is(h2, h3, div, p):has(+ ul):has(~ ol) {
   grid-column: 1;
 }
 
 .recipe-body--structured .lexxy-content > ol:not(ol ~ ol),
-.recipe-body--structured .lexxy-content > :is(div, p):has(+ ol:not(ol ~ ol)) {
+.recipe-body--structured .lexxy-content > :is(h2, h3, div, p):has(+ ol:not(ol ~ ol)) {
   grid-column: 2;
 }
 
 /* The ingredients and directions labels share a row, so neither takes a
    section's top margin or they'd sit at different heights */
+.recipe-body--structured .lexxy-content > :is(h2, h3):has(+ ul):has(~ ol),
+.recipe-body--structured .lexxy-content > :is(h2, h3):has(+ ol:not(ol ~ ol)),
 .recipe-body--structured .lexxy-content > :is(div, p):has(+ ul):has(~ ol) > strong:only-child,
 .recipe-body--structured .lexxy-content > :is(div, p):has(+ ol:not(ol ~ ol)) > strong:only-child {
   margin-top: 0;
@@ -681,7 +708,7 @@
   }
 
   .recipe-body .lexxy-content ol li {
-    grid-template-columns: 44px minmax(0, 1fr);
+    padding-left: 44px;
   }
 
   .recipe-body .lexxy-content ol li::before {

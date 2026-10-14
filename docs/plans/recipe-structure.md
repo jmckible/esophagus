@@ -28,11 +28,13 @@ Detect structure from the markup (an `ol` directions list exists) rather than st
 
 ## Work, roughly in dependency order
 
-1. **Decide the target format first.** Jordan has an "optimized" way of writing recipes for prepping mise and sequencing steps. Design it before converting anything, or every recipe gets reformatted twice. Open questions:
-   - Is mise a grouping of ingredients by prep bowl or stage?
-   - Are steps tied to the mise groups they consume?
-   - Does sequencing mean parallel tracks, such as the sauce built while the pork rests?
-   - How much of this Trix markup can carry, and when does it need structure in the database?
+1. **Decide the target format first.** Jordan has an "optimized" way of writing recipes for prepping mise and sequencing steps. Design it before converting anything, or every recipe gets reformatted twice. First draft, on American Chop Suey (`/r/6`, dev only so far):
+   - **The ingredient list is the mise.** Ingredients are grouped by the moment they enter the pan (one group, one bowl), in the order they're used. Things measured together share a group (Worcestershire + stock). Splits are spelled out at prep ("1 T parsley" in Spices and again in Finish).
+   - **Steps name groups** ("add aromatics"), so cooking never sends you back to the list.
+   - **Every quantity appears once in the directions, at the moment it's measured.** On a phone the ingredient list scrolls away, and the directions are what you read at the stove. Prep steps lead with the group in bold ("**Aromatics:** finely dice ½ large onion…") and carry the quantities. Once the heat is on, steps name groups and only give amounts for things measured on the spot (oil, butter, beef from the pack). The ingredient list becomes the check before you start: shopping, pantry, how many bowls.
+   - **Prep vs cook is a line, not yet a structure.** Recipe 6 went from 7 steps to 11, with the heat going on at step 7. A "Cook" heading or divider there might help scanning, but a second `ol` would break the desktop grid (only the first `ol` sits beside the ingredients). Revisit after cooking from it.
+   - **Background work leads.** The noodle soak is "Start first." Untested on a recipe with real parallel tracks (sauce while meat rests); try one before converting in bulk.
+   - **Markup carries it; no new fields.** Lexxy (replaced Trix 2026-10-13) writes `h2` section headings, and a group is `<li><strong>Label</strong><ul>…</ul></li>`. It has to be one nested `ul`, not a run of `ul`s: the structured grid puts the directions `ol` in a single row, so separate lists would push the steps apart.
 2. **Import link-only recipes.** Fetch the 15 empty-with-link recipes from their source and rewrite them into the target format.
 3. **Convert prose and one-list recipes.** Some prose recipes are legitimately notes (Salmon is a list of approaches), so leave those unstructured.
 4. **Model book references as a source.** About 90 stubs are pointers to physical cookbooks ("Food Lab", "Milk Street Tuesday"). A source field (book + page) fits them better than instruction text.
