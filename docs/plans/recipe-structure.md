@@ -38,7 +38,7 @@ Detect structure from the markup (an `ol` directions list exists) rather than st
 2. **Import link-only recipes.** Fetch the 15 empty-with-link recipes from their source and rewrite them into the target format.
 3. **Convert prose and one-list recipes.** Some prose recipes are legitimately notes (Salmon is a list of approaches), so leave those unstructured.
 4. **Model book references as a source.** About 90 stubs are pointers to physical cookbooks ("Food Lab", "Milk Street Tuesday"). A source field (book + page) fits them better than instruction text.
-5. **Photos.** A photo per structured recipe would carry larger index cards and the recipe header. Active Storage and `ruby-vips` are already in place.
+5. **Photos.** Built 2026-10-13: `Recipe#photo` shows in the recipe header per canvas G2, `bin/rails recipes:photo ID= URL=` attaches the source's `og:image` (found through the browser, since sites like Serious Eats block plain fetches), and `bin/push-recipe` carries it to production. Still to do: photos on index cards (canvas G1) and the public recipe page.
 
 ## Data quirks found along the way
 
