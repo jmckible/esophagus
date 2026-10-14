@@ -517,15 +517,15 @@
   color: var(--text-body);
 }
 
-.recipe-body .trix-content > div {
+.recipe-body .lexxy-content > :is(div, p) {
   max-width: 72ch;
 }
 
-.recipe-body .trix-content > div:has(> strong:only-child) {
+.recipe-body .lexxy-content > :is(div, p):has(> strong:only-child) {
   max-width: none;
 }
 
-.recipe-body .trix-content > div > strong:only-child {
+.recipe-body .lexxy-content > :is(div, p) > strong:only-child {
   display: block;
   margin-top: 34px;
   padding-bottom: 10px;
@@ -537,22 +537,22 @@
   color: var(--text);
 }
 
-.recipe-body .trix-content > div:first-child > strong:only-child {
+.recipe-body .lexxy-content > :is(div, p):first-child > strong:only-child {
   margin-top: 0;
 }
 
-.recipe-body .trix-content > div:has(> strong:only-child) + div {
+.recipe-body .lexxy-content > :is(div, p):has(> strong:only-child) + :is(div, p) {
   margin-top: 6px;
 }
 
-.recipe-body .trix-content ul,
-.recipe-body .trix-content ol {
+.recipe-body .lexxy-content ul,
+.recipe-body .lexxy-content ol {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.recipe-body .trix-content ul li {
+.recipe-body .lexxy-content ul li {
   padding: 9px 0;
   border-bottom: 1px solid var(--bg-soft);
   font-size: var(--fs-lg);
@@ -561,7 +561,7 @@
 }
 
 /* Sub-labels within ingredient lists ("Crust:", "Sauce:") */
-.recipe-body .trix-content ul li:has(> strong:only-child) {
+.recipe-body .lexxy-content ul li:has(> strong:only-child) {
   padding-top: 18px;
   font-size: var(--fs-xs);
   font-weight: var(--weight-bold);
@@ -570,11 +570,11 @@
   color: var(--text-dimmed);
 }
 
-.recipe-body .trix-content ol {
+.recipe-body .lexxy-content ol {
   counter-reset: step;
 }
 
-.recipe-body .trix-content ol li {
+.recipe-body .lexxy-content ol li {
   counter-increment: step;
   display: grid;
   grid-template-columns: 64px minmax(0, 1fr);
@@ -582,7 +582,7 @@
   border-bottom: 1px solid var(--bg-soft);
 }
 
-.recipe-body .trix-content ol li::before {
+.recipe-body .lexxy-content ol li::before {
   content: counter(step);
   font-size: var(--fs-4xl);
   font-weight: var(--weight-black);
@@ -592,43 +592,50 @@
   font-variant-numeric: tabular-nums;
 }
 
-.recipe-body .trix-content a {
+.recipe-body .lexxy-content a {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
-.recipe-body--structured .trix-content {
+.recipe-body--structured .lexxy-content {
   display: grid;
   grid-template-columns: 300px minmax(0, 1fr);
   grid-auto-flow: row dense;
   column-gap: 48px;
 }
 
-.recipe-body--structured .trix-content > * {
+.recipe-body--structured .lexxy-content > * {
   grid-column: 1 / -1;
 }
 
-.recipe-body--structured .trix-content > ul:has(~ ol),
-.recipe-body--structured .trix-content > div:has(+ ul):has(~ ol) {
+.recipe-body--structured .lexxy-content > ul:has(~ ol),
+.recipe-body--structured .lexxy-content > :is(div, p):has(+ ul):has(~ ol) {
   grid-column: 1;
 }
 
-.recipe-body--structured .trix-content > ol:not(ol ~ ol),
-.recipe-body--structured .trix-content > div:has(+ ol:not(ol ~ ol)) {
+.recipe-body--structured .lexxy-content > ol:not(ol ~ ol),
+.recipe-body--structured .lexxy-content > :is(div, p):has(+ ol:not(ol ~ ol)) {
   grid-column: 2;
 }
 
+/* The ingredients and directions labels share a row, so neither takes a
+   section's top margin or they'd sit at different heights */
+.recipe-body--structured .lexxy-content > :is(div, p):has(+ ul):has(~ ol) > strong:only-child,
+.recipe-body--structured .lexxy-content > :is(div, p):has(+ ol:not(ol ~ ol)) > strong:only-child {
+  margin-top: 0;
+}
+
 /* Lists after the directions (sauces, toppings) run in two columns */
-.recipe-body--structured .trix-content > ol ~ ul {
+.recipe-body--structured .lexxy-content > ol ~ ul {
   columns: 2;
   column-gap: 40px;
 }
 
-.recipe-body--structured .trix-content > ol ~ ul li {
+.recipe-body--structured .lexxy-content > ol ~ ul li {
   break-inside: avoid;
 }
 
-.recipe-body--prose .trix-content {
+.recipe-body--prose .lexxy-content {
   max-width: 68ch;
 }
 
@@ -659,11 +666,11 @@
 }
 
 @media (width < 900px) {
-  .recipe-body--structured .trix-content {
+  .recipe-body--structured .lexxy-content {
     display: block;
   }
 
-  .recipe-body--structured .trix-content > ol ~ ul {
+  .recipe-body--structured .lexxy-content > ol ~ ul {
     columns: 1;
   }
 }
@@ -673,11 +680,11 @@
     padding: 20px var(--space-md) var(--space-lg);
   }
 
-  .recipe-body .trix-content ol li {
+  .recipe-body .lexxy-content ol li {
     grid-template-columns: 44px minmax(0, 1fr);
   }
 
-  .recipe-body .trix-content ol li::before {
+  .recipe-body .lexxy-content ol li::before {
     font-size: var(--fs-3xl);
   }
 

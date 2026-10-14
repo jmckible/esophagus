@@ -1,242 +1,43 @@
-/*
- * Provides a drop-in pointer for the default Trix stylesheet that will format the toolbar and
- * the trix-editor content (whether displayed or under editing). Feel free to incorporate this
- * inclusion directly in any other asset bundle and remove this file.
- *
- *= require trix
-*/
+/* Lexxy ships its own editor and content styles, themed through variables.
+   Point them at the market day tokens so light and dark follow the device. */
+@import url('lexxy.css');
 
-/*
- * We need to override trix.css’s image gallery styles to accommodate the
- * <action-text-attachment> element we wrap around attachments. Otherwise,
- * images in galleries will be squished by the max-width: 33%; rule.
-*/
-.trix-content .attachment-gallery > action-text-attachment,
-.trix-content .attachment-gallery > .attachment {
-  flex: 1 0 33%;
-  padding: 0 0.5em;
-  max-width: 33%;
+:root {
+  --lexxy-color-ink: var(--text);
+  --lexxy-color-ink-medium: var(--text-muted);
+  --lexxy-color-ink-light: var(--text-dimmed);
+  --lexxy-color-ink-lighter: var(--leader);
+  --lexxy-color-ink-lightest: var(--bg-soft);
+  --lexxy-color-ink-inverted: var(--bg-surface);
+
+  --lexxy-color-canvas: var(--bg-surface);
+  --lexxy-color-text: var(--text-body);
+  --lexxy-color-text-subtle: var(--text-muted);
+  --lexxy-color-link: var(--text);
+  --lexxy-color-selected: color-mix(in srgb, var(--accent) 10%, var(--bg-surface));
+  --lexxy-color-selected-hover: color-mix(in srgb, var(--accent) 18%, var(--bg-surface));
+  --lexxy-color-selected-dark: var(--accent);
+  --lexxy-color-code-bg: var(--bg-soft);
+
+  --lexxy-color-table-header-bg: var(--bg-soft);
+  --lexxy-color-table-cell-border: var(--leader);
+
+  --lexxy-font-base: var(--font-ui);
+  --lexxy-font-mono: var(--font-mono);
+  --lexxy-text-small: var(--fs-sm);
+
+  --lexxy-focus-ring-color: var(--ring);
+  --lexxy-radius: var(--radius-md);
+  --lexxy-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 }
 
-.trix-content .attachment-gallery.attachment-gallery--2 > action-text-attachment,
-.trix-content .attachment-gallery.attachment-gallery--2 > .attachment, .trix-content .attachment-gallery.attachment-gallery--4 > action-text-attachment,
-.trix-content .attachment-gallery.attachment-gallery--4 > .attachment {
-  flex-basis: 50%;
-  max-width: 50%;
-}
-
-.trix-content action-text-attachment .attachment {
-  padding: 0 !important;
-  max-width: 100% !important;
-}
-
-/* Trix Toolbar Icon Improvements */
-trix-toolbar {
-  background: var(--bg-soft);
-  border: 1px solid var(--border);
+lexxy-editor {
+  --lexxy-editor-rows: 15em;
+  border-color: var(--leader);
   border-radius: var(--radius-lg);
-  padding: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-trix-editor {
-  min-height: 15em;
-  padding: 12px;
-  border: 1px solid var(--leader);
-  border-radius: var(--radius-lg);
-  background: var(--bg-surface);
   line-height: 1.55;
 }
 
-trix-editor:focus {
-  outline: none;
+lexxy-editor:focus-within {
   border-color: var(--text);
-}
-
-trix-toolbar .trix-dialog {
-  background: var(--bg-surface);
-}
-
-trix-toolbar .trix-button-row {
-  gap: 0.25rem;
-}
-
-trix-toolbar .trix-button-group {
-  gap: 0.25rem;
-  margin-right: 0.5rem;
-  border: none;
-}
-
-trix-toolbar .trix-button {
-  border: 1px solid transparent;
-  background: transparent;
-  border-radius: 0.25rem;
-  padding: 0.5rem;
-  width: 2.25rem;
-  height: 2.25rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  font-size: 0;
-  color: var(--text-muted);
-  transition: all 0.15s ease;
-}
-
-trix-toolbar .trix-button:hover {
-  background: var(--bg-soft);
-  border-color: var(--border);
-}
-
-trix-toolbar .trix-button.trix-active {
-  background: var(--text);
-  color: var(--bg-surface);
-  border-color: var(--text);
-}
-
-trix-toolbar .trix-button.trix-active::before {
-  color: var(--bg-surface);
-}
-
-/* Icon styles using Unicode and symbols */
-trix-toolbar .trix-button::before {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  line-height: 1;
-}
-
-/* Bold */
-trix-toolbar .trix-button--icon-bold::before {
-  content: "B";
-  font-weight: 700;
-}
-
-/* Italic */
-trix-toolbar .trix-button--icon-italic::before {
-  content: "I";
-  font-style: italic;
-  font-family: Georgia, serif;
-}
-
-/* Strike */
-trix-toolbar .trix-button--icon-strike::before {
-  content: "S";
-  text-decoration: line-through;
-}
-
-/* Link */
-trix-toolbar .trix-button--icon-link::before {
-  content: "🔗";
-  font-size: 1rem;
-}
-
-/* Heading */
-trix-toolbar .trix-button--icon-heading-1::before {
-  content: "H₁";
-  font-size: 1rem;
-}
-
-/* Quote */
-trix-toolbar .trix-button--icon-quote::before {
-  content: """;
-  font-size: 1.5rem;
-  font-family: Georgia, serif;
-}
-
-/* Code */
-trix-toolbar .trix-button--icon-code::before {
-  content: "</>";
-  font-size: 0.875rem;
-  font-family: monospace;
-}
-
-/* Bullet List */
-trix-toolbar .trix-button--icon-bullet-list::before {
-  content: "•";
-  font-size: 1.5rem;
-}
-
-/* Number List */
-trix-toolbar .trix-button--icon-number-list::before {
-  content: "1.";
-  font-size: 0.875rem;
-}
-
-/* Decrease Nesting Level */
-trix-toolbar .trix-button--icon-decrease-nesting-level::before {
-  content: "⇤";
-  font-size: 1.25rem;
-}
-
-/* Increase Nesting Level */
-trix-toolbar .trix-button--icon-increase-nesting-level::before {
-  content: "⇥";
-  font-size: 1.25rem;
-}
-
-/* Attach Files */
-trix-toolbar .trix-button--icon-attach::before {
-  content: "📎";
-  font-size: 1rem;
-}
-
-/* Undo */
-trix-toolbar .trix-button--icon-undo::before {
-  content: "↶";
-  font-size: 1.25rem;
-}
-
-/* Redo */
-trix-toolbar .trix-button--icon-redo::before {
-  content: "↷";
-  font-size: 1.25rem;
-}
-
-/* Dialog styles */
-trix-toolbar .trix-dialog {
-  border-radius: var(--radius-lg);
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-  border: 1px solid var(--border);
-}
-
-trix-toolbar .trix-dialog__link-fields {
-  padding: 1rem;
-}
-
-trix-toolbar .trix-input {
-  border: 1px solid var(--border);
-  border-radius: 0.25rem;
-  padding: var(--radius-lg) 0.75rem;
-  font-size: 0.875rem;
-}
-
-trix-toolbar .trix-button--dialog {
-  border-radius: 0.25rem;
-  padding: var(--radius-lg) 0.75rem;
-  font-size: 0.875rem;
-}
-
-/* Responsive: Show tooltips on hover for desktop */
-@media (min-width: 768px) {
-  trix-toolbar .trix-button {
-    position: relative;
-  }
-
-  trix-toolbar .trix-button:hover::after {
-    content: attr(title);
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--text);
-    color: var(--bg-surface);
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    font-size: 0.75rem;
-    white-space: nowrap;
-    margin-bottom: 0.25rem;
-    pointer-events: none;
-    z-index: 1000;
-  }
 }
