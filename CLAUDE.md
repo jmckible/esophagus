@@ -25,6 +25,7 @@ Every page except `/login` and the public cookbook/recipe pages needs the encryp
 ## Domain Model
 
 **Cookbook** → **Recipe** ← **Cook** (log entry with date)
+**Cookbook** → **Book** ← **Recipe** (printed source, with `book_page`)
 **Cookbook** → **Section** (organizing recipes)
 **Cookbook** → **User** (email/password auth)
 
@@ -46,13 +47,15 @@ Every page except `/login` and the public cookbook/recipe pages needs the encryp
 
 **Counter cache:** `Cook` uses `counter_cache: :cooks_count`. Never set it manually. Bulk deletes (`delete_all`) bypass callbacks and break the cache.
 
-**Rich text:** Recipe instructions are Action Text. Image variants need `ruby-vips` in the Gemfile, because image_processing 2.x no longer pulls it in.
+**Rich text:** Recipe instructions are Action Text, edited with Lexxy. Image variants need `ruby-vips` in the Gemfile, because image_processing 2.x no longer pulls it in.
+
+**Writing recipes:** `docs/recipe-format.md` is the format for instructions: mise-grouped ingredients, quantities in the steps, timing chips, books, photos, and pushing to production. Read it before writing or rewriting a recipe.
 
 **Styles:** "Market day", chosen on the design canvas at https://claude.ai/artifact/Jxo261hiBXYhkLg97jjwBX (rows D, F3/F4 and H are the spec).
 - **Scales:** sizes, radii and tracking come from the scale tokens in `tokens.css`, shared with dashboard and stardate. A value off the scale is a scale change, not a one-off.
 - **Colour:** a green-tinted daylight ground, white `.panel`s with 16px radius, and ink UI, with dark mode following the device. Tomato (`--accent`) is the only accent. Section hues come from `Section.hue_class_for` (12 oklch hues, first section unmarked). Favorite is font weight, not colour.
 - **Type:** Schibsted Grotesk for everything and Fragment Mono for counts and dates, self-hosted from `app/assets/fonts`. A new font file needs a server restart (`touch tmp/restart.txt`) before Propshaft fingerprints its `url()`.
-- **Pages:** pages render inside `main.page` (`content_for :page_class, 'page--narrow'` for forms) and open with `page_header`. The recipe body picks a treatment from `recipe_body_kind`: structured Trix markup (an `ol`) gets ingredients beside directions via CSS only, while prose and link-only recipes read as one column or a source panel.
+- **Pages:** pages render inside `main.page` (`content_for :page_class, 'page--narrow'` for forms) and open with `page_header`. The recipe body picks a treatment from `recipe_body_kind`: structured markup (an `ol`) gets ingredients beside directions via CSS only, while prose, link-only and book recipes read as one column or a source panel.
 - **Styleguide:** `/styleguide` shows every shared pattern, so add new ones there.
 
 **JavaScript:** Pin packages with `bin/importmap pin <pkg>`, which downloads into `vendor/javascript`. No CDN pins.
