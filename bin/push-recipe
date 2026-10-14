@@ -2,7 +2,8 @@
 # Copy recipes from the dev database to production:
 #   bin/push-recipe 6 [12 ...]
 # Instructions and the source link always move; the photo moves when dev has
-# one and it differs from production's. The name must match on both sides.
+# one and it differs from production's. The name must match on both sides,
+# and a recipe edited on production since dev's copy is skipped.
 # Whatever production had is saved to tmp/backups first.
 #
 # Production runs on this machine, so the recipe goes to its container over
@@ -10,6 +11,7 @@
 set -euo pipefail
 
 mkdir -p tmp/backups
+failed=0
 
 container=$(docker ps --filter label=service=esophagus --filter label=role=web --filter status=running --format '{{.Names}}' | head -1)
 if [[ -z $container ]]; then
@@ -26,7 +28,7 @@ for id in "$@"; do
   payload=$(mktemp)
   bin/rails runner "
     r = Recipe.find($id)
-    payload = { id: r.id, name: r.name, link: r.link, instructions: r.instructions.body.to_html }
+    payload = { id: r.id, name: r.name, link: r.link, instructions: r.instructions.body.to_html, edited_at: r.instructions.updated_at.iso8601 }
     if r.photo.attached?
       payload[:photo] = { filename: r.photo.filename.to_s, content_type: r.photo.content_type, checksum: r.photo.checksum, data: Base64.strict_encode64(r.photo.download) }
     end
@@ -37,7 +39,8 @@ for id in "$@"; do
      || ! grep -q '^Updated ' <<< "$output"; then
     rm -f "$payload"
     echo "$output" >&2
-    exit 1
+    failed=1
+    continue
   fi
   rm -f "$payload"
 
@@ -46,3 +49,4 @@ for id in "$@"; do
   grep '^Updated ' <<< "$output"
   echo "  previous production copy: $backup.json"
 done
+exit $failed

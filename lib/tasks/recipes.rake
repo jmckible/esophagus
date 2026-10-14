@@ -22,14 +22,20 @@ namespace :recipes do
 
   # Receives one recipe from bin/push-recipe as JSON on stdin and replaces
   # production's instructions and source link, plus its photo when one is
-  # sent. The name guards against dev and production ids drifting apart.
+  # sent. The name guards against dev and production ids drifting apart, and
+  # a production edit newer than dev's copy is never overwritten.
   # Prints what it replaced for the caller to keep as a backup.
   task import: :environment do
     payload = JSON.parse($stdin.read)
     recipe = Recipe.find(payload.fetch('id'))
     abort "Name mismatch: production ##{recipe.id} is #{recipe.name.inspect}, not #{payload['name'].inspect}" unless recipe.name == payload['name']
 
-    backup = { link: recipe.link, instructions: recipe.instructions&.body&.to_html.to_s }
+    current = recipe.instructions&.body&.to_html.to_s
+    if recipe.instructions&.updated_at&.after?(Time.iso8601(payload.fetch('edited_at'))) && current != payload['instructions']
+      abort "Skipped ##{recipe.id} #{recipe.name}: edited on production #{recipe.instructions.updated_at.to_date}, after dev's copy"
+    end
+
+    backup = { link: recipe.link, instructions: current }
     photo = payload['photo']
     replace_photo = photo && recipe.photo.blob&.checksum != photo['checksum']
     if replace_photo && recipe.photo.attached?
