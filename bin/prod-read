@@ -1,0 +1,17 @@
+#!/bin/bash
+# Run Ruby against the production database, read-only:
+#   bin/prod-read 'puts Recipe.count'
+# SQLite's query_only pragma makes any write raise, so this is safe to allow
+# where production writes are not (those go through bin/push-recipe).
+set -euo pipefail
+
+container=$(docker ps --filter label=service=esophagus --filter label=role=web --filter status=running --format '{{.Names}}' | head -1)
+if [[ -z $container ]]; then
+  echo "No running esophagus web container" >&2
+  exit 1
+fi
+
+docker exec -i "$container" bin/rails runner '
+  ActiveRecord::Base.connection.execute("PRAGMA query_only = ON")
+  eval($stdin.read)
+' <<< "$1"
