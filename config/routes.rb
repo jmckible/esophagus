@@ -5,11 +5,11 @@ Rails.application.routes.draw do
   post 'authenticate', to: 'sessions#create', as: :authenticate
 
   namespace :public, path: nil do
-    resources :cookbooks
-    resources :recipes
+    resources :cookbooks, only: :show
+    resources :recipes, only: :show
   end
 
-  resources :cookbooks
+  resources :cookbooks, only: :update
   resources :recipes, path: 'r' do
     resources :cooks, shallow: true
   end
