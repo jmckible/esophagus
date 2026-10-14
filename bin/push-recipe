@@ -1,0 +1,28 @@
+#!/bin/bash
+# Copy recipes' instructions from the dev database to production:
+#   bin/push-recipe 6 [12 ...]
+# Production's previous body is saved to tmp/backups first. Only instructions
+# move; the name must match on both sides or the recipe is skipped.
+set -euo pipefail
+
+mkdir -p tmp/backups
+
+for id in "$@"; do
+  if [[ ! $id =~ ^[0-9]+$ ]]; then
+    echo "Not a recipe id: $id" >&2
+    exit 1
+  fi
+
+  read -r name instructions < <(bin/rails runner "r = Recipe.find($id); print Base64.strict_encode64(r.name), ' ', Base64.strict_encode64(r.instructions.body.to_html)")
+
+  if ! output=$(kamal app exec --reuse -q "bin/rails recipes:import ID=$id NAME=$name INSTRUCTIONS=$instructions" 2>&1) \
+     || ! grep -q '^Updated ' <<< "$output"; then
+    echo "$output" >&2
+    exit 1
+  fi
+
+  backup="tmp/backups/recipe-$id-$(date +%Y%m%d-%H%M%S).html"
+  grep '^BACKUP ' <<< "$output" | cut -d' ' -f2 | base64 -d > "$backup"
+  grep '^Updated ' <<< "$output"
+  echo "  previous production body: $backup"
+done
