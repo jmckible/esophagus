@@ -42,4 +42,21 @@ class RecipeTest < ActiveSupport::TestCase
   test 'not forgotten when never cooked' do
     assert_not Recipe.new(name: 'Test', cooks_count: 13).forgotten?
   end
+
+  test 'book name finds or creates the book in its cookbook' do
+    cookbook = cookbooks(:one)
+    first = cookbook.recipes.create!(name: 'A', book_name: ' Dinner ', book_page: 77)
+    second = cookbook.recipes.create!(name: 'B', book_name: 'Dinner')
+
+    assert_equal first.book, second.book
+    assert_equal 'Dinner, p. 77', first.book_source
+    assert_equal 'Dinner', second.book_source
+  end
+
+  test 'blank book name clears the book' do
+    recipe = cookbooks(:one).recipes.create!(name: 'A', book_name: 'Dinner')
+    recipe.update!(book_name: '')
+
+    assert_nil recipe.book
+  end
 end

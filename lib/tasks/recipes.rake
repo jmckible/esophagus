@@ -21,9 +21,9 @@ namespace :recipes do
   end
 
   # Receives one recipe from bin/push-recipe as JSON on stdin and replaces
-  # production's instructions and source link, plus its photo when one is
-  # sent. The name guards against dev and production ids drifting apart, and
-  # a production edit newer than dev's copy is never overwritten.
+  # production's instructions and source (link, book, page), plus its photo
+  # when one is sent. The name guards against dev and production ids drifting
+  # apart, and a production edit newer than dev's copy is never overwritten.
   # Prints what it replaced for the caller to keep as a backup.
   task import: :environment do
     payload = JSON.parse($stdin.read)
@@ -35,7 +35,7 @@ namespace :recipes do
       abort "Skipped ##{recipe.id} #{recipe.name}: edited on production #{recipe.instructions.updated_at.to_date}, after dev's copy"
     end
 
-    backup = { link: recipe.link, instructions: current }
+    backup = { link: recipe.link, book: recipe.book&.name, book_page: recipe.book_page, instructions: current }
     photo = payload['photo']
     replace_photo = photo && recipe.photo.blob&.checksum != photo['checksum']
     if replace_photo && recipe.photo.attached?
@@ -44,6 +44,8 @@ namespace :recipes do
     puts "BACKUP #{backup.to_json}"
 
     recipe.link = payload['link'] if payload.key?('link')
+    recipe.book_name = payload['book'] if payload.key?('book')
+    recipe.book_page = payload['book_page'] if payload.key?('book_page')
     recipe.instructions = payload.fetch('instructions')
     if replace_photo
       recipe.photo.attach(io: StringIO.new(Base64.decode64(photo['data'])), filename: photo['filename'], content_type: photo['content_type'])

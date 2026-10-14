@@ -784,6 +784,12 @@
   letter-spacing: -0.03em;
 }
 
+.recipe-source-page {
+  margin-top: var(--space-xs);
+  font-size: var(--fs-md);
+  color: var(--text-muted);
+}
+
 .recipe-source-url {
   margin-top: var(--space-xs);
   font-size: var(--fs-sm);

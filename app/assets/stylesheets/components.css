@@ -250,6 +250,11 @@ input[type="month"].form-control {
   gap: 0 var(--space-lg);
 }
 
+/* A short number beside a wide field, like a book's page */
+.form-row:has(> .form-group--narrow) {
+  grid-template-columns: 1fr 8ch;
+}
+
 .form-actions {
   display: flex;
   gap: 12px;

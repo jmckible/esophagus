@@ -23,7 +23,15 @@
         = render 'recipes/stats', recipe: @recipe
       = link_to 'Edit', [:edit, @recipe], class: 'text-link'
 
-  - case recipe_body_kind(@recipe)
+  - kind = recipe_body_kind(@recipe)
+  - if @recipe.book && kind != :structured
+    %section.panel.recipe-source
+      %p.label Recipe in
+      %p.recipe-source-host= @recipe.book_name
+      - if @recipe.book_page
+        %p.recipe-source-page.mono= "Page #{@recipe.book_page}"
+
+  - case kind
   - when :structured, :prose
     - timed = recipe_timed?(@recipe)
     %article.panel.recipe-body{ class: "recipe-body--#{recipe_body_kind(@recipe)}", data: (timed ? { controller: 'timeline', action: 'turbo:morph@document->timeline#refresh' } : {}) }
@@ -42,11 +50,12 @@
       .recipe-source-actions
         = link_to 'Open recipe ↗', @recipe.link, class: 'btn btn-ink', target: '_blank', rel: 'noopener'
         = link_to 'Add instructions', [:edit, @recipe], class: 'text-link'
-  - else
-    %section.panel.recipe-source
-      %p.recipe-source-host No instructions yet
-      .recipe-source-actions
-        = link_to 'Add instructions', [:edit, @recipe], class: 'btn btn-secondary'
+  - when :empty
+    - unless @recipe.book
+      %section.panel.recipe-source
+        %p.recipe-source-host No instructions yet
+        .recipe-source-actions
+          = link_to 'Add instructions', [:edit, @recipe], class: 'btn btn-secondary'
 
   %section.panel#cook-history
     = render 'recipes/cook_history', recipe: @recipe

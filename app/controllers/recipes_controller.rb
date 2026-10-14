@@ -53,11 +53,12 @@ class RecipesController < ApplicationController
   protected
 
   def recipe_params
-    permitted = params.fetch(:recipe, {}).permit(:name, :link, :instructions, :section_id, :parent_id, :kid_status, :photo, :remove_photo)
+    permitted = params.fetch(:recipe, {}).permit(:name, :link, :instructions, :section_id, :parent_id, :kid_status, :photo, :remove_photo, :book_name, :book_page)
     # Convert empty string to nil for association fields
     permitted[:section_id] = nil if permitted[:section_id].blank?
     permitted[:parent_id] = nil if permitted[:parent_id].blank?
     permitted[:kid_status] = nil if permitted[:kid_status].blank?
+    permitted[:book_page] = nil if permitted[:book_page].blank?
     permitted
   end
 

@@ -1,6 +1,6 @@
 = content_for :title, @recipe.display_name
 
-= page_header @recipe.display_name, back: [@recipe.cookbook.name, [:public, @recipe.cookbook]], eyebrow: @recipe.section&.name do
+= page_header @recipe.display_name, back: [@recipe.cookbook.name, [:public, @recipe.cookbook]], eyebrow: @recipe.section&.name, summary: @recipe.book_source do
   - if @recipe.link
     = link_to 'Open recipe ↗', @recipe.link, class: 'btn btn-secondary', target: '_blank', rel: 'noopener'
 

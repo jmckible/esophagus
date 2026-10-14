@@ -12,6 +12,7 @@ class Recipe < ApplicationRecord
   belongs_to :cookbook
   belongs_to :section, optional: true
   belongs_to :parent, class_name: 'Recipe', optional: true
+  belongs_to :book, optional: true
 
   has_many :cooks, dependent: :destroy
   has_many :variants, class_name: 'Recipe', foreign_key: :parent_id, dependent: :nullify
@@ -25,6 +26,21 @@ class Recipe < ApplicationRecord
 
   scope :abc, ->{ reorder(name: :asc) }
   scope :bases_only, ->{ where(parent_id: nil) }
+
+  def book_name
+    defined?(@book_name) ? @book_name : book&.name
+  end
+
+  # Typed in the form. Resolved on validation, since building through
+  # cookbook.recipes assigns attributes before the cookbook.
+  def book_name=(name)
+    @book_name = name.to_s.squish
+  end
+
+  # "Dinner, p. 77"
+  def book_source
+    [book_name, ("p. #{book_page}" if book_page)].compact.join(', ') if book
+  end
 
   def display_name
     parent ? "#{parent.name} - #{name}" : name
@@ -86,6 +102,11 @@ class Recipe < ApplicationRecord
   validate :cannot_be_own_parent
   validate :parent_cannot_be_variant
   validate :photo_is_an_image
+  validate :book_in_same_cookbook
+
+  before_validation if: -> { defined?(@book_name) } do
+    self.book = @book_name.presence && cookbook.books.find_or_initialize_by(name: @book_name)
+  end
 
   # A new upload in the same save wins over the remove box
   after_save do
@@ -98,6 +119,10 @@ class Recipe < ApplicationRecord
 
   def parent_cannot_be_variant
     errors.add(:parent_id, "must be a base recipe") if parent&.parent_id
+  end
+
+  def book_in_same_cookbook
+    errors.add(:book, "must be in this cookbook") if book && book.cookbook_id != cookbook_id
   end
 
   def photo_is_an_image

@@ -17,6 +17,10 @@
       = recipe.kid_status.humanize
     - else
       %span.recipe-stat-none Not assessed
+- if recipe.book && recipe_body_kind(recipe) == :structured
+  .recipe-stat
+    %dt.label Book
+    %dd= recipe.book_source
 - if recipe.link.present?
   .recipe-stat
     %dt.label Source

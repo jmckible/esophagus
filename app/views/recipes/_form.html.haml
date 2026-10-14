@@ -32,6 +32,17 @@
         = f.label :link, 'External link', class: 'form-label'
         = f.text_field :link, class: 'form-control', placeholder: 'https://example.com/recipe'
 
+      .form-row
+        .form-group
+          = f.label :book_name, 'Book', class: 'form-label'
+          = f.text_field :book_name, class: 'form-control', list: 'books', autocomplete: 'off', placeholder: 'Printed cookbook'
+          %datalist#books
+            - Current.cookbook.books.abc.each do |book|
+              %option{ value: book.name }
+        .form-group.form-group--narrow
+          = f.label :book_page, 'Page', class: 'form-label'
+          = f.number_field :book_page, class: 'form-control', min: 1
+
       .form-group
         = f.label :kid_status, 'Kid status', class: 'form-label'
         = f.select :kid_status, Recipe.kid_statuses.keys.map { |status| [status.humanize, status] }, { include_blank: 'Not set' }, { class: 'form-control' }
