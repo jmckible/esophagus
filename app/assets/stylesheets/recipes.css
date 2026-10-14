@@ -453,6 +453,43 @@
   align-items: center;
 }
 
+/* With a photo, it sits flush in the panel's top-right corner beside the
+   title and log form, and the stats run full width beneath both */
+.recipe-head--photo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 440px;
+  grid-template-areas: "top photo" "foot foot";
+  column-gap: var(--space-xl);
+  overflow: hidden;
+}
+
+.recipe-head-photo {
+  grid-area: photo;
+  width: calc(100% + var(--space-xl));
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  margin: -28px calc(-1 * var(--space-xl)) 0 0;
+  background: var(--bg-soft);
+}
+
+.recipe-head--photo .recipe-head-top {
+  grid-area: top;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  padding-bottom: 26px;
+}
+
+.recipe-head--photo .recipe-head-title {
+  flex: 0 0 auto;
+}
+
+.recipe-head--photo .recipe-head-foot {
+  grid-area: foot;
+  margin-top: 0;
+}
+
 @media (width < 768px) {
   .recipe-head {
     padding: 20px var(--space-md) 0;
@@ -464,6 +501,21 @@
 
   .recipe-head-top {
     gap: 20px;
+  }
+
+  .recipe-head--photo {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "photo" "top" "foot";
+  }
+
+  .recipe-head-photo {
+    width: calc(100% + 2 * var(--space-md));
+    margin: -20px calc(-1 * var(--space-md)) 20px;
+  }
+
+  .recipe-head--photo .recipe-head-top {
+    align-items: stretch;
+    padding-bottom: 20px;
   }
 
   .recipe-head-log,

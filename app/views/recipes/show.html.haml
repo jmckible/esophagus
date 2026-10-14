@@ -1,7 +1,9 @@
 = content_for :title, @recipe.display_name
 
 .recipe{ class: @recipe.section&.hue_class }
-  %section.panel.recipe-head
+  %section.panel.recipe-head{ class: ('recipe-head--photo' if @recipe.photo.attached?) }
+    - if @recipe.photo.attached?
+      = image_tag @recipe.photo.variant(:header), class: 'recipe-head-photo', alt: '', width: 880, height: 660
     .recipe-head-top
       .recipe-head-title
         .chips

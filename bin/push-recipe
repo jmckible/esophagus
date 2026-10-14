@@ -1,11 +1,21 @@
 #!/bin/bash
-# Copy recipes' instructions from the dev database to production:
+# Copy recipes from the dev database to production:
 #   bin/push-recipe 6 [12 ...]
-# Production's previous body is saved to tmp/backups first. Only instructions
-# move; the name must match on both sides or the recipe is skipped.
+# Instructions always move; the photo moves when dev has one and it differs
+# from production's. The name must match on both sides. Whatever production
+# had is saved to tmp/backups first.
+#
+# Production runs on this machine, so the recipe goes to its container over
+# docker exec stdin: a photo is too big for a command-line argument.
 set -euo pipefail
 
 mkdir -p tmp/backups
+
+container=$(docker ps --filter label=service=esophagus --filter label=role=web --filter status=running --format '{{.Names}}' | head -1)
+if [[ -z $container ]]; then
+  echo "No running esophagus web container" >&2
+  exit 1
+fi
 
 for id in "$@"; do
   if [[ ! $id =~ ^[0-9]+$ ]]; then
@@ -13,16 +23,26 @@ for id in "$@"; do
     exit 1
   fi
 
-  read -r name instructions < <(bin/rails runner "r = Recipe.find($id); puts [r.name, r.instructions.body.to_html].map { Base64.strict_encode64(it) }.join(' ')")
+  payload=$(mktemp)
+  bin/rails runner "
+    r = Recipe.find($id)
+    payload = { id: r.id, name: r.name, instructions: r.instructions.body.to_html }
+    if r.photo.attached?
+      payload[:photo] = { filename: r.photo.filename.to_s, content_type: r.photo.content_type, checksum: r.photo.checksum, data: Base64.strict_encode64(r.photo.download) }
+    end
+    print payload.to_json
+  " > "$payload"
 
-  if ! output=$(kamal app exec --reuse -q "bin/rails recipes:import ID=$id NAME=$name INSTRUCTIONS=$instructions" 2>&1) \
+  if ! output=$(docker exec -i "$container" bin/rails recipes:import < "$payload" 2>&1) \
      || ! grep -q '^Updated ' <<< "$output"; then
+    rm -f "$payload"
     echo "$output" >&2
     exit 1
   fi
+  rm -f "$payload"
 
-  backup="tmp/backups/recipe-$id-$(date +%Y%m%d-%H%M%S).html"
-  grep '^BACKUP ' <<< "$output" | cut -d' ' -f2 | base64 -d > "$backup"
+  backup="tmp/backups/recipe-$id-$(date +%Y%m%d-%H%M%S)"
+  grep '^BACKUP ' <<< "$output" | cut -d' ' -f2- > "$backup.json"
   grep '^Updated ' <<< "$output"
-  echo "  previous production body: $backup"
+  echo "  previous production copy: $backup.json"
 done

@@ -2,6 +2,13 @@ class Recipe < ApplicationRecord
 
   has_rich_text :instructions
 
+  # 4:3 to match the header slot, at twice its 440px width
+  has_one_attached :photo do |attachable|
+    attachable.variant :header, resize_to_fill: [880, 660], format: :webp, saver: { quality: 80 }
+  end
+
+  attr_accessor :remove_photo
+
   belongs_to :cookbook
   belongs_to :section, optional: true
   belongs_to :parent, class_name: 'Recipe', optional: true
@@ -78,6 +85,12 @@ class Recipe < ApplicationRecord
   validates :name, presence: true
   validate :cannot_be_own_parent
   validate :parent_cannot_be_variant
+  validate :photo_is_an_image
+
+  # A new upload in the same save wins over the remove box
+  after_save do
+    photo.purge_later if ActiveModel::Type::Boolean.new.cast(remove_photo) && !attachment_changes.key?('photo')
+  end
 
   def cannot_be_own_parent
     errors.add(:parent_id, "cannot be self") if !new_record? && parent_id == id
@@ -85,5 +98,9 @@ class Recipe < ApplicationRecord
 
   def parent_cannot_be_variant
     errors.add(:parent_id, "must be a base recipe") if parent&.parent_id
+  end
+
+  def photo_is_an_image
+    errors.add(:photo, "must be an image") if photo.attached? && !photo.content_type.to_s.start_with?('image/')
   end
 end

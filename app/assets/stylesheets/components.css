@@ -227,6 +227,23 @@ input[type="month"].form-control {
   color: var(--text-muted);
 }
 
+.form-check {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  min-height: 44px;
+}
+
+.form-photo {
+  display: block;
+  width: 220px;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  margin-bottom: var(--space-md);
+  border-radius: var(--radius-lg);
+}
+
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;

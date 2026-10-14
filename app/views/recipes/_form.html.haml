@@ -38,6 +38,20 @@
 
   .panel
     .panel-header
+      %h2.panel-title Photo
+    .panel-body
+      - if recipe.photo.attached?
+        = image_tag recipe.photo.variant(:header), class: 'form-photo', alt: ''
+      .form-group
+        = f.label :photo, (recipe.photo.attached? ? 'Replace photo' : 'Photo'), class: 'form-label'
+        = f.file_field :photo, accept: 'image/*', class: 'form-control'
+      - if recipe.photo.attached?
+        %label.form-check
+          = f.check_box :remove_photo
+          Remove photo
+
+  .panel
+    .panel-header
       %h2.panel-title Instructions
     .panel-body
       = f.rich_text_area :instructions
