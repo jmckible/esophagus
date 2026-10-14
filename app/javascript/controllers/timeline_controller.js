@@ -4,6 +4,7 @@ import { Controller } from '@hotwired/stimulus'
 // opens with its duration as inline code:
 //   `10 min`, `1½ h`  takes that long
 //   `~5 h`            about that long
+//   `75–90 min`       a range, planned at the top of it
 //   `6 h+`            at least that long, so it can start the night before
 //   `≤ 1½ h`          a hold that can last up to that long; planned at half,
 //                     so the steps before it can run early or late
@@ -54,12 +55,12 @@ export default class extends Controller {
           label = 'Night before'
         } else if (step.kind === 'hold') {
           const end = new Date(at.getTime() + step.planned * MINUTE)
-          const from = this.clock(new Date(end.getTime() - step.minutes * MINUTE))
+          const from = this.when(new Date(end.getTime() - step.minutes * MINUTE), ready)
           const to = this.clock(end)
           const suffix = to.match(/\s?[AP]M$/i)?.[0]
           label = `${suffix && from.endsWith(suffix) ? from.slice(0, -suffix.length) : from}–${to}`
         } else {
-          label = this.clock(at)
+          label = this.when(at, ready)
         }
         if (step.consumes) parentLabel = label
       }
@@ -68,7 +69,11 @@ export default class extends Controller {
 
     const first = steps[0] && this.labelOf(steps[0].element)
     const firstClock = steps.map((step) => this.labelOf(step.element)).find((label) => label && label !== 'Night before')
-    this.summaryTarget.textContent = first === 'Night before' ? `Start the night before, then at ${firstClock}` : `Start at ${first}`
+    const [, day, clock] = first?.match(/^(Day before|\d+ days before), (.*)$/) || []
+    this.summaryTarget.textContent =
+      first === 'Night before' ? `Start the night before, then at ${firstClock}`
+        : day ? `Start ${day === 'Day before' ? 'the day before' : day} at ${clock}`
+          : `Start at ${first}`
   }
 
   // Minutes from the first step, for each step in the directions
@@ -101,7 +106,7 @@ export default class extends Controller {
     if (source.startsWith('+')) { kind = 'offset'; source = source.slice(1) }
     else if (/^(≤|<=)/.test(source)) { kind = 'hold'; source = source.replace(/^(≤|<=)/, '') }
     else if (source.endsWith('+')) { kind = 'minimum'; source = source.slice(0, -1) }
-    source = source.replace(/^~/, '')
+    source = source.replace(/^~/, '').replace(/[\d.½¼¾⅓⅔]+\s*[–-]\s*(?=\d)/g, '')
 
     let minutes = 0
     let matched = false
@@ -114,8 +119,21 @@ export default class extends Controller {
     return matched ? { kind, minutes } : null
   }
 
+  // The evening before the ready day, or early the same morning
   beforeDawn(at, ready) {
-    return at.toDateString() !== ready.toDateString() || at.getHours() < 7
+    const days = this.daysBefore(at, ready)
+    return days === 1 || (days === 0 && at.getHours() < 7)
+  }
+
+  daysBefore(date, ready) {
+    return Math.round((new Date(ready).setHours(0, 0, 0, 0) - new Date(date).setHours(0, 0, 0, 0)) / (24 * 60 * MINUTE))
+  }
+
+  // A clock time, with the day when it falls before the ready day
+  when(date, ready) {
+    const days = this.daysBefore(date, ready)
+    if (days <= 0) return this.clock(date)
+    return `${days === 1 ? 'Day before' : `${days} days before`}, ${this.clock(date)}`
   }
 
   clock(date) {
