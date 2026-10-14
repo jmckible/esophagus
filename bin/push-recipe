@@ -13,7 +13,7 @@ for id in "$@"; do
     exit 1
   fi
 
-  read -r name instructions < <(bin/rails runner "r = Recipe.find($id); print Base64.strict_encode64(r.name), ' ', Base64.strict_encode64(r.instructions.body.to_html)")
+  read -r name instructions < <(bin/rails runner "r = Recipe.find($id); puts [r.name, r.instructions.body.to_html].map { Base64.strict_encode64(it) }.join(' ')")
 
   if ! output=$(kamal app exec --reuse -q "bin/rails recipes:import ID=$id NAME=$name INSTRUCTIONS=$instructions" 2>&1) \
      || ! grep -q '^Updated ' <<< "$output"; then

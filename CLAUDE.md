@@ -10,6 +10,7 @@ bin/rails test           # Model tests only; thin coverage, so also check pages 
 bundle exec rubocop      # Lint (config is permissive)
 bundle exec haml-lint app/views
 bin/deploy               # git push origin main && kamal deploy
+bin/push-recipe 6 [12 ...] # Copy recipes' instructions from dev to production (backs up to tmp/backups)
 kamal logs               # Production logs (alias in config/deploy.yml; follows, so pipe to head)
 kamal console            # Production Rails console
 ```
