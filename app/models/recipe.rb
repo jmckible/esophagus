@@ -2,9 +2,11 @@ class Recipe < ApplicationRecord
 
   has_rich_text :instructions
 
-  # 4:3 to match the header slot, at twice its 440px width
+  # Header: 4:3 to match its slot, at twice its 440px width. Thumb: the index
+  # row's square, at twice its 76px.
   has_one_attached :photo do |attachable|
     attachable.variant :header, resize_to_fill: [880, 660], format: :webp, saver: { quality: 80 }
+    attachable.variant :thumb, resize_to_fill: [152, 152], format: :webp, saver: { quality: 80 }
   end
 
   attr_accessor :remove_photo
@@ -26,6 +28,8 @@ class Recipe < ApplicationRecord
 
   scope :abc, ->{ reorder(name: :asc) }
   scope :bases_only, ->{ where(parent_id: nil) }
+  # Index rows render a thumb variant per photo; preload what its URL needs
+  scope :with_thumbs, ->{ includes(photo_attachment: { blob: { variant_records: { image_attachment: :blob } } }) }
 
   def book_name
     defined?(@book_name) ? @book_name : book&.name

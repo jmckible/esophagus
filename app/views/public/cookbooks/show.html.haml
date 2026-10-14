@@ -9,5 +9,5 @@
         %span.section-mark
         %span.index-section-name= section.name
       .index-section-rows
-        - section.recipes.bases_only.includes(:variants).abc.each do |recipe|
+        - section.recipes.bases_only.includes(:variants).with_thumbs.abc.each do |recipe|
           = render 'recipes/family', recipe:, public: true

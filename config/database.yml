@@ -1,6 +1,9 @@
 default: &default
   adapter: sqlite3
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  # Wait for a concurrent writer instead of failing at once with "database is
+  # locked", e.g. when a page's thumbnails are generated in parallel
+  timeout: 5000
 
 development:
   <<: *default
