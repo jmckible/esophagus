@@ -1,16 +1,41 @@
-- total = recipe.cooks.count
-- shown = recipe.cooks.order(date: :desc).limit(24).to_a
-.panel-header
+- cooks = recipe.family_cooks.to_a
+- today = Time.zone.today
+.panel-header.cook-log-header
   %h2.panel-title Cook log
-  - if total > shown.size
-    %span.mono.label= "#{shown.size} of #{total}"
+  - if cooks.any?
+    - usual = recipe.typical_interval
+    - since = (today - cooks.last.date).to_i
+    %p.mono.cook-log-summary
+      %span= pluralize(cooks.size, 'cook')
+      - if usual
+        %span= "usually every #{interval_in_words(usual)}"
+      %span{ class: ('cook-log-overdue' if usual && since > usual * 2) }= "last cooked #{time_since_in_words(cooks.last.date)}"
 .panel-body
-  - if shown.any?
-    - shown.group_by { it.date.year }.each do |year, cooks|
-      .cook-year
-        %span.cook-year-label= year
+  - if cooks.any?
+    - by_year = cooks.group_by { it.date.year }
+    .cook-timeline
+      - today.year.downto(cooks.first.date.year).each do |year|
+        - year_cooks = by_year.fetch(year, [])
+        .cook-timeline-row
+          %span.mono.cook-timeline-year= year
+          .cook-timeline-track{ class: ('is-current' if year == today.year), style: ("--today: #{year_position(today)}" if year == today.year), role: 'img', 'aria-label': "#{pluralize(year_cooks.size, 'cook')} in #{year}" }
+            - year_cooks.each do |cook|
+              %span.cook-tick{ class: ('cook-tick--variant' if cook.recipe_id != recipe.id), style: "--at: #{year_position(cook.date)}", title: cook.date.to_fs(:long) }
+      .cook-timeline-row.cook-timeline-axis{ 'aria-hidden': true }
+        %span.cook-timeline-year
+        .cook-timeline-months
+          - 1.upto(12) do |month|
+            %span{ style: "--at: #{year_position(Date.new(2025, month, 1))}" }= Date::ABBR_MONTHNAMES[month].first
+    - if cooks.any? { it.recipe_id != recipe.id }
+      %p.cook-timeline-legend
+        %span.cook-tick.cook-tick--variant
+        Variants
+    - recent = cooks.select { it.recipe_id == recipe.id }.last(3).reverse
+    - if recent.any?
+      .cook-recent
+        %span.label Recent
         %ul.cook-dates
-          - cooks.each do |cook|
+          - recent.each do |cook|
             %li.cook-date
               %span.mono= cook.date.strftime('%b %-d')
               = button_to '×', cook, method: :delete, class: 'cook-delete', form_class: 'cook-delete-form', 'aria-label': "Remove the #{cook.date.to_fs(:long)} cook", data: { turbo_confirm: 'Remove this cook?' }

@@ -49,6 +49,21 @@ class Recipe < ApplicationRecord
     Recipe.where(id: [id] + variant_ids).maximum(:last_cooked_on)
   end
 
+  # A base's own cooks plus its variants'; a variant just its own.
+  def family_cooks
+    Cook.where(recipe_id: [id] + variant_ids).order(:date)
+  end
+
+  # Median days between cooks. Unlike expected_interval this ignores the time
+  # before the first cook, and one long lapse doesn't drag it out.
+  def typical_interval
+    dates = family_cooks.distinct.pluck(:date)
+    return if dates.size < 3
+
+    gaps = dates.each_cons(2).map { |a, b| (b - a).to_i }.sort
+    gaps[gaps.size / 2]
+  end
+
   private
 
   def expected_interval

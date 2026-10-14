@@ -686,26 +686,130 @@
   }
 }
 
-/* Cook log */
+/* Cook log: one row per year, a tick per cook placed by day of year, so
+   spacing shows the habit and gaps show the drift */
 
-.cook-year {
+.cook-log-header {
+  flex-wrap: wrap;
+}
+
+.cook-log-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-sm);
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+}
+
+.cook-log-summary span + span::before {
+  content: '·';
+  margin-right: var(--space-sm);
+  color: var(--text-dimmed);
+}
+
+.cook-log-overdue {
+  color: var(--accent);
+}
+
+.cook-timeline-row {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-md);
+  height: var(--space-xl);
+}
+
+.cook-timeline-year {
+  width: 36px;
+  flex-shrink: 0;
+  font-size: var(--fs-xs);
+  line-height: 1;
+  color: var(--text-dimmed);
+}
+
+.cook-timeline-track,
+.cook-timeline-months {
+  position: relative;
+  flex: 1;
+  height: 100%;
+}
+
+.cook-timeline-track::before {
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.cook-timeline-track.is-current::before {
+  right: auto;
+  width: var(--today);
+}
+
+.cook-timeline-track.is-current::after {
+  content: '';
+  position: absolute;
+  left: var(--today);
+  bottom: -3px;
+  width: 7px;
+  height: 7px;
+  translate: -50% 0;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+}
+
+.cook-tick {
+  position: absolute;
+  left: var(--at);
+  bottom: 0;
+  width: 2px;
+  height: 16px;
+  translate: -50% 0;
+  border-radius: var(--radius-xs);
+  background: var(--text);
+}
+
+.cook-tick--variant {
+  background: var(--text-dimmed);
+  height: 12px;
+}
+
+.cook-timeline-axis {
+  height: auto;
+  margin-top: var(--space-xs);
+}
+
+.cook-timeline-months {
+  height: 1lh;
+  font-size: var(--fs-micro);
+  color: var(--text-dimmed);
+}
+
+.cook-timeline-months span {
+  position: absolute;
+  left: var(--at);
+}
+
+.cook-timeline-legend {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+  font-size: var(--fs-xs);
+  color: var(--text-dimmed);
+}
+
+.cook-timeline-legend .cook-tick {
+  position: static;
+  translate: none;
+}
+
+.cook-recent {
   display: flex;
   align-items: baseline;
   gap: var(--space-md);
-  padding: 10px 0;
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
   border-top: 1px solid var(--bg-soft);
-}
-
-.cook-year:first-child {
-  border-top: 0;
-}
-
-.cook-year-label {
-  width: 64px;
-  flex-shrink: 0;
-  font-size: var(--fs-2xl);
-  font-weight: var(--weight-black);
-  letter-spacing: -0.03em;
 }
 
 .cook-dates {

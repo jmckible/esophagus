@@ -60,6 +60,10 @@
         .index-section-rows
           = render 'recipes/family', recipe:
 
+- if @samples.first
+  %section.panel
+    = render 'recipes/cook_history', recipe: @samples.first
+
 %section.panel
   .panel-header
     %h2.panel-title Page header

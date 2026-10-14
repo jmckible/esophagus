@@ -32,6 +32,29 @@ module ApplicationHelper
     end
   end
 
+  def interval_in_words(days)
+    if days < 14 then pluralize(days, 'day')
+    elsif days < 60 then pluralize((days / 7.0).round, 'wk')
+    elsif days < 730 then pluralize((days / 30.4).round, 'mo')
+    else pluralize((days / 365.25).round, 'yr')
+    end
+  end
+
+  def time_since_in_words(date)
+    days = (Time.zone.today - date).to_i
+    case days
+    when 0 then 'today'
+    when 1 then 'yesterday'
+    else "#{interval_in_words(days)} ago"
+    end
+  end
+
+  # Where a date falls across its year, as a CSS percentage
+  def year_position(date)
+    days = Date.leap?(date.year) ? 366 : 365
+    "#{((date.yday - 0.5) / days * 100).round(2)}%"
+  end
+
   def link_host(url)
     URI.parse(url).host&.delete_prefix('www.') || url
   rescue URI::InvalidURIError
