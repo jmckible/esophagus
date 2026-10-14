@@ -669,6 +669,61 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* Long recipes: steps open with a duration chip, and the timeline controller
+   labels each with its clock time worked back from the ready time */
+.recipe-body .lexxy-content ol li > code {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 1px 8px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-soft);
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.step-time {
+  display: block;
+  margin-bottom: 2px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--section-mark, var(--accent));
+}
+
+.step-time:empty {
+  display: none;
+}
+
+.timeline-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-sm) var(--space-lg);
+  margin-bottom: var(--space-xl);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--border);
+}
+
+.timeline-ready {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.timeline-ready .form-control {
+  width: auto;
+  font-family: var(--font-mono);
+  font-size: var(--fs-md);
+}
+
+.timeline-summary {
+  padding-bottom: 10px;
+  font-size: var(--fs-lg);
+  font-weight: var(--weight-medium);
+  color: var(--text);
+}
+
 .recipe-body .lexxy-content a {
   text-decoration: underline;
   text-underline-offset: 3px;

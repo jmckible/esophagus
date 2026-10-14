@@ -90,7 +90,8 @@
       = link_to 'Small', '#', class: 'btn btn-secondary btn-sm'
 
 -# Structured recipe body: ingredients grouped as mise (a label item nesting
--# what goes in together), beside numbered directions
+-# what goes in together), beside numbered directions. A step opening with a
+-# duration chip gets a clock time from the timeline controller.
 %article.panel.recipe-body.recipe-body--structured
   .lexxy-content
     %h2 Ingredients
@@ -107,7 +108,10 @@
           %li ½ T dried oregano
     %h2 Directions
     %ol
-      %li Heat oil in a sauté pan over medium-high. Add aromatics, reduce to medium, cook until softened, about 7 minutes.
+      %li
+        %span.step-time 4:50 PM
+        %code 10 min
+        Heat oil in a sauté pan over medium-high. Add aromatics, reduce to medium, cook until softened, about 7 minutes.
       %li
         %strong Then:
         add spices; cook until fragrant, about 1 minute.

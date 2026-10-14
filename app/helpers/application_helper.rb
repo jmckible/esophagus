@@ -55,6 +55,11 @@ module ApplicationHelper
     "#{((date.yday - 0.5) / days * 100).round(2)}%"
   end
 
+  # Steps that open with a duration chip (`2 h`) get a ready-at timeline
+  def recipe_timed?(recipe)
+    recipe.instructions&.body&.to_html.to_s.match?(%r{<li[^>]*>\s*<code>})
+  end
+
   def link_host(url)
     URI.parse(url).host&.delete_prefix('www.') || url
   rescue URI::InvalidURIError

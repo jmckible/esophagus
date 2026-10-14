@@ -25,7 +25,14 @@
 
   - case recipe_body_kind(@recipe)
   - when :structured, :prose
-    %article.panel.recipe-body{ class: "recipe-body--#{recipe_body_kind(@recipe)}" }
+    - timed = recipe_timed?(@recipe)
+    %article.panel.recipe-body{ class: "recipe-body--#{recipe_body_kind(@recipe)}", data: (timed ? { controller: 'timeline', action: 'turbo:morph@document->timeline#refresh' } : {}) }
+      - if timed
+        .timeline-bar
+          %label.timeline-ready
+            %span.label Ready at
+            %input.form-control{ type: 'time', value: '17:30', data: { timeline_target: 'readyAt', action: 'change->timeline#change' } }
+          %p.timeline-summary{ data: { timeline_target: 'summary' } }
       = @recipe.instructions
   - when :link
     %section.panel.recipe-source
