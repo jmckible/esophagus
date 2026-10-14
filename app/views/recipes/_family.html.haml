@@ -2,19 +2,11 @@
 .index-family
   - [recipe, *recipe.variants.sort_by(&:name)].each do |member|
     - variant = member.parent_id.present?
-    - photo = !variant && member.photo.attached?
-    = link_to (public ? [:public, member] : member), class: ['index-row', ('variant' if variant), ('favorite' if member.favorite?), ('index-row--photo' if photo)], data: { search: [(recipe.name if variant), member.name].compact.join(' ').downcase } do
-      - if photo
-        = image_tag member.photo.variant(:thumb), class: 'index-row-photo', alt: '', width: 76, height: 76, loading: 'lazy'
-        %span.index-row-body
-          %span.index-row-name= member.name
-          - unless public
-            %span.index-row-count.mono= pluralize(member.cooks_count, 'cook')
-      - else
-        %span.index-row-name
-          - if variant
-            %span.index-row-parent #{recipe.name} ·
-          = member.name
-        %span.index-row-leader{ 'aria-hidden': true }
-        - unless public
-          %span.index-row-count.mono= member.cooks_count
+    = link_to (public ? [:public, member] : member), class: ['index-row', ('variant' if variant), ('favorite' if member.favorite?)], data: { search: [(recipe.name if variant), member.name].compact.join(' ').downcase } do
+      %span.index-row-name
+        - if variant
+          %span.index-row-parent #{recipe.name} ·
+        = member.name
+      %span.index-row-leader{ 'aria-hidden': true }
+      - unless public
+        %span.index-row-count.mono= member.cooks_count

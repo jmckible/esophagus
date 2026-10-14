@@ -5,12 +5,12 @@ class RecipesController < ApplicationController
   end
 
   def index
-    sections = Current.cookbook.sections.by_position.includes(recipes: [:variants, *Recipe.with_thumbs.includes_values]).to_a
+    sections = Current.cookbook.sections.by_position.includes(recipes: :variants).to_a
     @sections = sections.each_with_index.map do |section, i|
       IndexSection.new("section-#{section.id}", section.name, Section.hue_class_for(i), section.recipes.select { it.parent_id.nil? }.sort_by(&:name))
     end
 
-    uncategorized = Current.cookbook.recipes.where(section: nil).bases_only.includes(:variants).with_thumbs.abc.to_a
+    uncategorized = Current.cookbook.recipes.where(section: nil).bases_only.includes(:variants).abc.to_a
     @sections << IndexSection.new('section-uncategorized', 'Uncategorized', Section.uncategorized_hue_class(Current.cookbook), uncategorized) if uncategorized.any?
   end
 

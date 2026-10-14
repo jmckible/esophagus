@@ -223,46 +223,6 @@
   text-align: right;
 }
 
-/* A recipe with a photo trades the leader for a thumbnail, its count below
-   the name (canvas G1) */
-.index-row--photo {
-  align-items: center;
-  gap: 12px;
-  padding: var(--space-sm) 0;
-}
-
-.index-row-photo {
-  flex-shrink: 0;
-  width: 64px;
-  height: 64px;
-  object-fit: cover;
-  border-radius: var(--radius-lg);
-  background: var(--bg-soft);
-}
-
-.index-row-body {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
-  min-width: 0;
-}
-
-.index-row--photo .index-row-count {
-  min-width: 0;
-  text-align: left;
-}
-
-@media (width < 768px) {
-  .index-row-photo {
-    width: 76px;
-    height: 76px;
-  }
-
-  .index-row--photo .index-row-name {
-    font-size: var(--fs-lg);
-  }
-}
-
 .index-row:hover .index-row-name {
   color: var(--accent-hover);
 }
